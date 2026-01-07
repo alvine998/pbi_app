@@ -1002,7 +1002,7 @@ export default function Home({ navigation }: HomeProps) {
             >
               Berita Terbaru
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('NewsList')}>
               <Text
                 style={{
                   fontSize: normalize(14),

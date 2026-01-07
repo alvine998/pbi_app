@@ -8,6 +8,7 @@ import Login from '../screens/login/Login';
 import Register from '../screens/register/Register';
 import ForgotPassword from '../screens/forgot-password/ForgotPassword';
 import NewsDetail from '../screens/home/NewsDetail';
+import NewsList from '../screens/home/NewsList';
 import ProductDetail from '../screens/mart/ProductDetail';
 import Media from '../screens/media/Media';
 import AboutUs from '../screens/about_us/AboutUs';
@@ -55,7 +56,8 @@ export type RootStackParamList = {
   Register: undefined;
   ForgotPassword: undefined;
   MainApp: undefined;
-  NewsDetail: { newsId?: number; newsTitle?: string; newsContent?: string; newsImage?: string };
+  NewsDetail: { newsId: number; newsTitle: string; newsContent: string; newsImage: string };
+  NewsList: undefined;
   ProductDetail: { productId?: number; productName?: string; productPrice?: number; productImage?: string };
   Media: undefined;
   AboutUs: undefined;
@@ -112,6 +114,7 @@ const AppNavigator = () => {
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="MainApp" component={BottomTabNavigator} />
         <Stack.Screen name="NewsDetail" component={NewsDetail} />
+        <Stack.Screen name="NewsList" component={NewsList} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
         <Stack.Screen name="Media" component={Media} />
         <Stack.Screen name="AboutUs" component={AboutUs} />
