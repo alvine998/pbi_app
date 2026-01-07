@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COLOR } from '../../utils/Color';
+import { requireKyc } from '../../utils/authGuard';
 
 const EMERGENCY_SERVICES = [
   {
@@ -12,7 +13,7 @@ const EMERGENCY_SERVICES = [
     description: 'Terhubung langsung dengan tim tanggap darurat PBI untuk penanganan cepat.',
     icon: 'phone-alt',
     color: '#FF6B6B',
-    action: () => Linking.openURL('tel:0211234567'),
+    action: () => Linking.openURL('tel:088293477465'),
     actionLabel: 'Hubungi',
   },
   {
@@ -21,7 +22,7 @@ const EMERGENCY_SERVICES = [
     description: 'Dapatkan bantuan melalui chat 24/7 langsung dengan petugas kami.',
     icon: 'comments',
     color: '#1A73E8',
-    action: () => Alert.alert('Live Chat', 'Fitur live chat akan segera tersedia.'),
+    action: (navigation: any) => requireKyc(navigation, () => navigation.navigate('SOSLiveChat')),
     actionLabel: 'Mulai Chat',
   },
   {
@@ -30,7 +31,7 @@ const EMERGENCY_SERVICES = [
     description: 'Terhubung lewat WhatsApp untuk respons cepat mengenai keadaan darurat.',
     icon: 'whatsapp',
     color: '#25D366',
-    action: () => Linking.openURL('https://wa.me/628123456789'),
+    action: () => Linking.openURL('https://wa.me/6288293477465'),
     actionLabel: 'Buka WhatsApp',
   },
 ];
@@ -133,7 +134,7 @@ export default function SOS({ navigation }: { navigation: any }) {
                   marginRight: normalize(14),
                 }}
               >
-                <Icon name={service.icon} size={normalize(20)} color={COLOR.WHITE} solid />
+                <Icon name={service.icon as string} size={normalize(20)} color={COLOR.WHITE} solid />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: normalize(16), fontWeight: '700', color: COLOR.PRIMARY }}>{service.title}</Text>
@@ -142,7 +143,7 @@ export default function SOS({ navigation }: { navigation: any }) {
                 </Text>
               </View>
               <TouchableOpacity
-                onPress={service.action}
+                onPress={() => service.action(navigation)}
                 activeOpacity={0.85}
                 style={{
                   backgroundColor: service.color,

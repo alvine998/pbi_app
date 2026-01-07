@@ -347,11 +347,13 @@ export default function TransactionHistory({ navigation }: TransactionHistoryPro
                         key={filter.id}
                         style={{
                             paddingHorizontal: normalize(16),
-                            paddingVertical: normalize(8),
-                            borderRadius: normalize(20),
+                            paddingVertical: normalize(0),
+                            borderRadius: normalize(10),
                             backgroundColor: selectedFilter === filter.id ? COLOR.PRIMARY : COLOR.WHITE,
                             marginRight: normalize(10),
                             borderWidth: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             borderColor: selectedFilter === filter.id ? COLOR.PRIMARY : '#E5E5E5',
                         }}
                         onPress={() => setSelectedFilter(filter.id)}

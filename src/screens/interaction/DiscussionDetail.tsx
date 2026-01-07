@@ -5,13 +5,14 @@ import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COLOR } from '../../utils/Color';
 import Toast from 'react-native-toast-message';
+import { requireKyc } from '../../utils/authGuard';
 
 interface DiscussionDetailProps {
   navigation: any;
   route: { params?: { discussionId?: string } };
 }
 
-const SAMPLE_DISCUSSIONS = {
+const SAMPLE_DISCUSSIONS: Record<string, any> = {
   't-1': {
     title: 'Strategi meningkatkan loyalitas member baru',
     author: 'Hesti W',
@@ -152,7 +153,7 @@ export default function DiscussionDetail({ navigation, route }: DiscussionDetail
             <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(22) }}>{discussion.body}</Text>
 
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: normalize(16) }}>
-              {discussion.tags.map((tag) => (
+              {discussion.tags.map((tag: string) => (
                 <View
                   key={tag}
                   style={{
@@ -176,7 +177,7 @@ export default function DiscussionDetail({ navigation, route }: DiscussionDetail
             Balasan Komunitas
           </Text>
 
-          {discussion.comments.map((comment) => (
+          {discussion.comments.map((comment: any) => (
             <View
               key={comment.id}
               style={{
@@ -217,7 +218,7 @@ export default function DiscussionDetail({ navigation, route }: DiscussionDetail
               flexDirection: 'row',
               justifyContent: 'center',
             }}
-            onPress={() => setModalVisible(true)}
+            onPress={() => requireKyc(navigation, () => setModalVisible(true))}
           >
             <Icon name="pen" size={normalize(14)} color={COLOR.SECONDARY} solid style={{ marginRight: normalize(8) }} />
             <Text style={{ color: COLOR.SECONDARY, fontWeight: '700' }}>Tambah Komentar</Text>

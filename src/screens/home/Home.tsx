@@ -116,6 +116,42 @@ export default function Home({ navigation }: HomeProps) {
     },
   ];
 
+  const newsData = [
+    {
+      id: 1,
+      title: 'Update Fitur Terbaru PBI App',
+      description: 'Kami telah menambahkan fitur-fitur menarik untuk meningkatkan pengalaman pengguna.',
+      content: 'Kami sangat excited untuk mengumumkan update terbaru dari PBI App yang akan meningkatkan pengalaman pengguna secara signifikan. Fitur-fitur baru meliputi sistem notifikasi cerdas, antarmuka pengguna yang diperbarui, dan keamanan data yang ditingkatkan.',
+      image: 'https://images.unsplash.com/photo-1573163231162-73573d99e2b0?q=80&w=2069&auto=format&fit=crop',
+      time: '2 jam yang lalu',
+      category: 'Update',
+      icon: 'newspaper',
+      bgColor: '#667eea'
+    },
+    {
+      id: 2,
+      title: 'Keamanan Data Terjamin',
+      description: 'Sistem keamanan terbaru telah diimplementasikan untuk melindungi data pengguna.',
+      content: 'Privasi dan keamanan data Anda adalah prioritas utama kami. Kami baru saja meningkatkan infrastruktur keamanan kami dengan enkripsi tingkat lanjut dan protokol autentikasi multi-faktor.',
+      image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop',
+      time: '5 jam yang lalu',
+      category: 'Keamanan',
+      icon: 'shield-alt',
+      bgColor: '#4ECDC4'
+    },
+    {
+      id: 3,
+      title: 'Peluncuran Fitur Baru',
+      description: 'Fitur inovatif telah diluncurkan untuk memudahkan aktivitas pengguna sehari-hari.',
+      content: 'Nikmati kemudahan akses ke berbagai layanan PBI hanya dengan satu ketukan. Fitur baru ini dirancang untuk mempercepat proses transaksi dan interaksi antar anggota.',
+      image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop',
+      time: '1 hari yang lalu',
+      category: 'Inovasi',
+      icon: 'rocket',
+      bgColor: '#FECA57'
+    }
+  ];
+
   // Auto-advance carousel
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -630,6 +666,7 @@ export default function Home({ navigation }: HomeProps) {
                   handleProtectedFeature(
                     'Near Member',
                     () => navigation.navigate('NearMember'),
+                    true,
                   )
                 }
               >
@@ -659,7 +696,7 @@ export default function Home({ navigation }: HomeProps) {
                     color={COLOR.WHITE}
                     solid
                   />
-                  {renderRestrictionBadge(!isAuthenticated, false)}
+                  {renderRestrictionBadge(!isAuthenticated, !hasCompletedKyc)}
                 </View>
                 <Text
                   style={{
@@ -829,6 +866,7 @@ export default function Home({ navigation }: HomeProps) {
                   handleProtectedFeature(
                     'Interaction',
                     () => navigation.navigate('InteractionMenu'),
+                    true,
                   )
                 }
               >
@@ -858,7 +896,7 @@ export default function Home({ navigation }: HomeProps) {
                     color={COLOR.WHITE}
                     solid
                   />
-                  {renderRestrictionBadge(!isAuthenticated, false)}
+                  {renderRestrictionBadge(!isAuthenticated, !hasCompletedKyc)}
                 </View>
                 <Text
                   style={{
@@ -966,321 +1004,142 @@ export default function Home({ navigation }: HomeProps) {
             </TouchableOpacity>
           </View>
 
-          {/* News Card 1 */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLOR.WHITE,
-              borderRadius: normalize(16),
-              marginBottom: normalize(16),
-              overflow: 'hidden',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 12,
-              elevation: 8,
-            }}
-            onPress={() => navigation.navigate('NewsDetail')}
-            activeOpacity={0.9}
-          >
-            <View
+          {newsData.map((news) => (
+            <TouchableOpacity
+              key={news.id}
               style={{
-                height: normalize(140),
-                backgroundColor:
-                  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
+                backgroundColor: COLOR.WHITE,
+                borderRadius: normalize(16),
+                marginBottom: normalize(16),
+                overflow: 'hidden',
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 12,
+                elevation: 8,
               }}
+              onPress={() => navigation.navigate('NewsDetail', {
+                newsId: news.id,
+                newsTitle: news.title,
+                newsContent: news.content,
+                newsImage: news.image
+              })}
+              activeOpacity={0.9}
             >
               <View
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                }}
-              />
-              <Icon
-                name="newspaper"
-                size={normalize(40)}
-                color={COLOR.WHITE}
-                solid
-                style={{ zIndex: 1 }}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  top: normalize(12),
-                  right: normalize(12),
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  paddingHorizontal: normalize(8),
-                  paddingVertical: normalize(4),
-                  borderRadius: normalize(12),
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: normalize(10),
-                    fontWeight: '600',
-                    color: COLOR.WHITE,
-                  }}
-                >
-                  TERBARU
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                padding: normalize(16),
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: normalize(16),
-                  fontWeight: 'bold',
-                  color: COLOR.PRIMARY,
-                  marginBottom: normalize(8),
-                  lineHeight: normalize(22),
-                }}
-              >
-                Update Fitur Terbaru PBI App
-              </Text>
-              <Text
-                style={{
-                  fontSize: normalize(13),
-                  color: COLOR.GRAY,
-                  lineHeight: normalize(18),
-                  marginBottom: normalize(12),
-                }}
-              >
-                Kami telah menambahkan fitur-fitur menarik untuk meningkatkan
-                pengalaman pengguna.
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  height: normalize(140),
+                  backgroundColor: news.bgColor,
+                  justifyContent: 'center',
                   alignItems: 'center',
+                  position: 'relative',
+                }}
+              >
+                <Image
+                  source={{ uri: news.image }}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0.6,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.2)',
+                  }}
+                />
+                <Icon
+                  name={news.icon}
+                  size={normalize(40)}
+                  color={COLOR.WHITE}
+                  solid
+                  style={{ zIndex: 1 }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: normalize(12),
+                    right: normalize(12),
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    paddingHorizontal: normalize(8),
+                    paddingVertical: normalize(4),
+                    borderRadius: normalize(12),
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: normalize(10),
+                      fontWeight: '600',
+                      color: COLOR.WHITE,
+                    }}
+                  >
+                    {news.category.toUpperCase()}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  padding: normalize(16),
                 }}
               >
                 <Text
                   style={{
-                    fontSize: normalize(11),
-                    color: COLOR.GRAY,
+                    fontSize: normalize(16),
+                    fontWeight: 'bold',
+                    color: COLOR.PRIMARY,
+                    marginBottom: normalize(8),
+                    lineHeight: normalize(22),
                   }}
                 >
-                  2 jam yang lalu
+                  {news.title}
                 </Text>
-                <Icon
-                  name="arrow-right"
-                  size={normalize(12)}
-                  color={COLOR.PRIMARY}
-                  solid
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          {/* News Card 2 */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLOR.WHITE,
-              borderRadius: normalize(16),
-              marginBottom: normalize(16),
-              overflow: 'hidden',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 12,
-              elevation: 8,
-            }}
-            onPress={() => navigation.navigate('NewsDetail')}
-            activeOpacity={0.9}
-          >
-            <View
-              style={{
-                height: normalize(140),
-                backgroundColor: '#4ECDC4',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}
-            >
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: 'rgba(78, 205, 196, 0.8)',
-                }}
-              />
-              <Icon
-                name="shield-alt"
-                size={normalize(40)}
-                color={COLOR.WHITE}
-                solid
-                style={{ zIndex: 1 }}
-              />
-            </View>
-            <View
-              style={{
-                padding: normalize(16),
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: normalize(16),
-                  fontWeight: 'bold',
-                  color: COLOR.PRIMARY,
-                  marginBottom: normalize(8),
-                  lineHeight: normalize(22),
-                }}
-              >
-                Keamanan Data Terjamin
-              </Text>
-              <Text
-                style={{
-                  fontSize: normalize(13),
-                  color: COLOR.GRAY,
-                  lineHeight: normalize(18),
-                  marginBottom: normalize(12),
-                }}
-              >
-                Sistem keamanan terbaru telah diimplementasikan untuk melindungi
-                data pengguna.
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
                 <Text
                   style={{
-                    fontSize: normalize(11),
+                    fontSize: normalize(13),
                     color: COLOR.GRAY,
+                    lineHeight: normalize(18),
+                    marginBottom: normalize(12),
                   }}
+                  numberOfLines={2}
                 >
-                  5 jam yang lalu
+                  {news.description}
                 </Text>
-                <Icon
-                  name="arrow-right"
-                  size={normalize(12)}
-                  color={COLOR.PRIMARY}
-                  solid
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          {/* News Card 3 */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLOR.WHITE,
-              borderRadius: normalize(16),
-              marginBottom: normalize(16),
-              overflow: 'hidden',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 12,
-              elevation: 8,
-            }}
-            onPress={() => navigation.navigate('NewsDetail')}
-            activeOpacity={0.9}
-          >
-            <View
-              style={{
-                height: normalize(140),
-                backgroundColor: '#FECA57',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}
-            >
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: 'rgba(254, 202, 87, 0.8)',
-                }}
-              />
-              <Icon
-                name="rocket"
-                size={normalize(40)}
-                color={COLOR.WHITE}
-                solid
-                style={{ zIndex: 1 }}
-              />
-            </View>
-            <View
-              style={{
-                padding: normalize(16),
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: normalize(16),
-                  fontWeight: 'bold',
-                  color: COLOR.PRIMARY,
-                  marginBottom: normalize(8),
-                  lineHeight: normalize(22),
-                }}
-              >
-                Peluncuran Fitur Baru
-              </Text>
-              <Text
-                style={{
-                  fontSize: normalize(13),
-                  color: COLOR.GRAY,
-                  lineHeight: normalize(18),
-                  marginBottom: normalize(12),
-                }}
-              >
-                Fitur inovatif telah diluncurkan untuk memudahkan aktivitas
-                pengguna sehari-hari.
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <Text
+                <View
                   style={{
-                    fontSize: normalize(11),
-                    color: COLOR.GRAY,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
-                  1 hari yang lalu
-                </Text>
-                <Icon
-                  name="arrow-right"
-                  size={normalize(12)}
-                  color={COLOR.PRIMARY}
-                  solid
-                />
+                  <Text
+                    style={{
+                      fontSize: normalize(11),
+                      color: COLOR.GRAY,
+                    }}
+                  >
+                    {news.time}
+                  </Text>
+                  <Icon
+                    name="arrow-right"
+                    size={normalize(12)}
+                    color={COLOR.PRIMARY}
+                    solid
+                  />
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          ))}
         </View>
       </ScrollView>
     </View>

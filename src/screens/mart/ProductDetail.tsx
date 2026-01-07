@@ -75,12 +75,33 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
   };
 
   const handleBuyNow = () => {
+    // Create cart item from current product
+    const cartItems = [
+      {
+        id: currentProduct.id,
+        name: currentProduct.name,
+        price: currentProduct.price,
+        image: currentProduct.image,
+        quantity: quantity,
+        stock: currentProduct.stock || 99,
+      },
+    ];
+
+    const subtotal = currentProduct.price * quantity;
+    const shipping = 15000;
+    const total = subtotal + shipping;
+
     Toast.show({
       type: 'info',
       text1: 'Beli Sekarang',
       text2: 'Mengalihkan ke halaman checkout...',
       position: 'top',
     });
+
+    // Navigate to checkout with product data
+    setTimeout(() => {
+      navigation.navigate('Checkout', { cartItems, total });
+    }, 500);
   };
 
   const renderStars = (rating: number) => {

@@ -247,6 +247,58 @@ export default function Profile({ navigation }: ProfileProps) {
           >
             {userProfile.email}
           </Text>
+
+          {/* KYC Status Badge */}
+          <View style={{ marginTop: normalize(10) }}>
+            {profile?.isKycVerified ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: COLOR.SUCCESS + '20',
+                  paddingHorizontal: normalize(12),
+                  paddingVertical: normalize(6),
+                  borderRadius: normalize(12),
+                }}
+              >
+                <Icon name="check-circle" size={normalize(14)} color={COLOR.SUCCESS} solid />
+                <Text
+                  style={{
+                    fontSize: normalize(12),
+                    fontWeight: '600',
+                    color: COLOR.SUCCESS,
+                    marginLeft: normalize(6),
+                  }}
+                >
+                  KYC Terverifikasi
+                </Text>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: '#FFA500' + '20',
+                  paddingHorizontal: normalize(12),
+                  paddingVertical: normalize(6),
+                  borderRadius: normalize(12),
+                }}
+                onPress={() => navigation.navigate('KYCVerification')}
+              >
+                <Icon name="exclamation-circle" size={normalize(14)} color="#FFA500" solid />
+                <Text
+                  style={{
+                    fontSize: normalize(12),
+                    fontWeight: '600',
+                    color: '#FFA500',
+                    marginLeft: normalize(6),
+                  }}
+                >
+                  Verifikasi KYC
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
 

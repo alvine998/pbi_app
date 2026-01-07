@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image, StatusBar, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, StatusBar, Dimensions, Share, Alert } from 'react-native';
 import { COLOR } from '../../utils/Color';
 import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -11,48 +11,46 @@ interface NewsDetailProps {
 
 export default function NewsDetail({ navigation, route }: NewsDetailProps) {
   const { width } = Dimensions.get('window');
-  const { newsId } = route.params || {};
-  const { newsTitle, newsContent, newsImage } = route.params || {};
+  const params = route.params || {};
 
-  // Sample detailed news content with enhanced data
+  // Sample detailed news content with enhanced data, preferring route params
   const sampleNewsData = {
-    id: newsId || 1,
-    title: newsTitle || 'Update Fitur Terbaru PBI App',
-    image: newsImage || 'https://via.placeholder.com/400x250/4A90E2/FFFFFF?text=News+Image',
-    content: newsContent || `
+    id: params.newsId || 1,
+    title: params.newsTitle || 'Update Fitur Terbaru PBI App',
+    image: params.newsImage || 'https://images.unsplash.com/photo-1573163231162-73573d99e2b0?q=80&w=2069&auto=format&fit=crop',
+    content: params.newsContent || `
       Kami sangat excited untuk mengumumkan update terbaru dari PBI App yang akan meningkatkan pengalaman pengguna secara signifikan.
-
-      Fitur-fitur baru yang telah kami tambahkan meliputi:
-
-      🎯 Sistem Notifikasi yang Lebih Cerdas
-      Pengguna sekarang akan menerima notifikasi yang lebih relevan dan tepat waktu berdasarkan aktivitas dan preferensi mereka.
-
-      🎨 Antarmuka Pengguna yang Diperbaharui
-      Desain baru yang lebih modern dan intuitif membuat navigasi aplikasi menjadi lebih mudah dan menyenangkan.
-
-      🔒 Keamanan Data yang Ditingkatkan
-      Kami telah mengimplementasikan enkripsi end-to-end untuk semua data pengguna guna memastikan keamanan maksimal.
-
-      📊 Dashboard Analytics
-      Fitur baru yang memungkinkan pengguna untuk melihat statistik penggunaan aplikasi mereka dalam bentuk grafik yang menarik.
-
-      🌐 Mode Offline yang Diperluas
-      Pengguna sekarang dapat mengakses lebih banyak konten bahkan tanpa koneksi internet.
-
-      Update ini merupakan bagian dari komitmen kami untuk terus meningkatkan kualitas layanan dan memberikan pengalaman terbaik bagi seluruh pengguna PBI App.
-
-      Kami berterima kasih atas dukungan dan feedback yang telah diberikan oleh komunitas pengguna. Masukan dari Anda sangat berharga bagi pengembangan aplikasi ini.
-
-      Untuk informasi lebih lanjut tentang update ini dan fitur-fitur lainnya, silakan kunjungi halaman bantuan atau hubungi customer service kami.
+      
+      Fitur-fitur baru yang telah kami tambahkan meliputi sistem notifikasi yang lebih cerdas, antarmuka pengguna yang diperbaharui, dan keamanan data yang ditingkatkan.
     `,
     author: 'Tim PBI',
-    authorAvatar: 'https://via.placeholder.com/40x40/4A90E2/FFFFFF?text=TB',
-    date: '15 Oktober 2024',
+    authorAvatar: 'https://ui-avatars.com/api/?name=Tim+PBI&background=0D1B2A&color=fff',
+    date: params.newsTime || '15 Oktober 2024',
     readTime: '5 menit baca',
-    category: 'Teknologi',
+    category: params.newsCategory || 'Update',
     views: 1250,
     likes: 89,
     shares: 23
+  };
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `${sampleNewsData.title}\n\n${sampleNewsData.content}\n\nBaca selengkapnya di PBI App!`,
+        title: sampleNewsData.title,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    }
   };
 
   return (
@@ -118,24 +116,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity
-                style={{
-                  width: normalize(44),
-                  height: normalize(44),
-                  borderRadius: normalize(22),
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: normalize(10),
-                }}
-              >
-                <Icon
-                  name="bookmark"
-                  size={normalize(18)}
-                  color={COLOR.WHITE}
-                  solid
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
+                onPress={handleShare}
                 style={{
                   width: normalize(44),
                   height: normalize(44),
@@ -146,7 +127,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                 }}
               >
                 <Icon
-                  name="share"
+                  name="share-alt"
                   size={normalize(18)}
                   color={COLOR.WHITE}
                   solid
@@ -339,11 +320,12 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
             </TouchableOpacity>
 
             <TouchableOpacity
+              onPress={handleShare}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 backgroundColor: '#F0F9FF',
-                paddingHorizontal: normalize(20),
+                paddingHorizontal: normalize(32),
                 paddingVertical: normalize(12),
                 borderRadius: normalize(25),
                 borderWidth: 1,
@@ -351,7 +333,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
               }}
             >
               <Icon
-                name="share"
+                name="share-alt"
                 size={normalize(16)}
                 color="#3182CE"
                 solid
@@ -364,37 +346,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                   color: '#3182CE',
                 }}
               >
-                {sampleNewsData.shares}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#F0FFF4',
-                paddingHorizontal: normalize(20),
-                paddingVertical: normalize(12),
-                borderRadius: normalize(25),
-                borderWidth: 1,
-                borderColor: '#C6F6D5',
-              }}
-            >
-              <Icon
-                name="bookmark"
-                size={normalize(16)}
-                color="#38A169"
-                solid
-                style={{ marginRight: normalize(8) }}
-              />
-              <Text
-                style={{
-                  fontSize: normalize(14),
-                  fontWeight: '600',
-                  color: '#38A169',
-                }}
-              >
-                Simpan
+                Bagikan
               </Text>
             </TouchableOpacity>
           </View>

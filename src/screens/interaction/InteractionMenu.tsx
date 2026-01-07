@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COLOR } from '../../utils/Color';
+import { requireKyc } from '../../utils/authGuard';
 
 const FEATURE_SHORTCUTS = [
   {
@@ -124,7 +125,13 @@ export default function InteractionMenu({ navigation }: { navigation: any }) {
                 alignItems: 'center',
               }}
               activeOpacity={0.85}
-              onPress={item.route ? () => navigation.navigate(item.route) : undefined}
+              onPress={item.route ? () => {
+                if (item.id === 'volunteer' || item.id === 'polling') {
+                  requireKyc(navigation, () => navigation.navigate(item.route));
+                } else {
+                  navigation.navigate(item.route);
+                }
+              } : undefined}
             >
               <View
                 style={{

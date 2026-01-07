@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import normalize from 'react-native-normalize';
 import { COLOR } from '../../utils/Color';
+import { requireKyc } from '../../utils/authGuard';
 
 interface PollOption {
   id: string;
@@ -52,7 +53,9 @@ export default function PollingSurvey({ navigation }: { navigation: any }) {
   const [selectedOptions, setSelectedOptions] = React.useState<Record<string, string>>({});
 
   const handleVote = (pollId: string, optionId: string) => {
-    setSelectedOptions((prev) => ({ ...prev, [pollId]: optionId }));
+    requireKyc(navigation, () => {
+      setSelectedOptions((prev) => ({ ...prev, [pollId]: optionId }));
+    });
   };
 
   return (

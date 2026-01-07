@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import normalize from 'react-native-normalize';
 import { COLOR } from '../../utils/Color';
 import Toast from 'react-native-toast-message';
+import { requireKyc } from '../../utils/authGuard';
 
 const VOLUNTEER_PROGRAMS = [
   {
@@ -45,8 +46,10 @@ export default function Volunteer({ navigation }: { navigation: any }) {
   const [isModalVisible, setModalVisible] = React.useState(false);
 
   const handleApply = (program: (typeof VOLUNTEER_PROGRAMS)[number]) => {
-    setSelectedProgram(program);
-    setModalVisible(true);
+    requireKyc(navigation, () => {
+      setSelectedProgram(program);
+      setModalVisible(true);
+    });
   };
 
   const handleConfirm = () => {

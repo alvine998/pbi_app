@@ -359,6 +359,51 @@ export default function Akun({ navigation }: AkunProps) {
               flexDirection: 'row',
               alignItems: 'center',
               paddingVertical: normalize(15),
+              borderBottomWidth: 1,
+              borderBottomColor: '#F0F0F0',
+            }}
+            onPress={() => navigation.navigate('TransactionHistory')}
+          >
+            <View
+              style={{
+                width: normalize(40),
+                height: normalize(40),
+                backgroundColor: '#FF6B35',
+                borderRadius: normalize(20),
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: normalize(15),
+              }}
+            >
+              <Icon
+                name="receipt"
+                size={normalize(18)}
+                color={COLOR.WHITE}
+                solid
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                color: COLOR.PRIMARY,
+                flex: 1,
+              }}
+            >
+              Riwayat Transaksi
+            </Text>
+            <Icon
+              name="chevron-right"
+              size={normalize(14)}
+              color={COLOR.GRAY}
+              solid
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: normalize(15),
             }}
           >
             <View

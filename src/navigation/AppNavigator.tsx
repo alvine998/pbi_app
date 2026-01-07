@@ -38,6 +38,9 @@ import NotificationSettings from '../screens/notification/NotificationSettings';
 import Cart from '../screens/mart/Cart';
 import Checkout from '../screens/mart/Checkout';
 import TransactionHistory from '../screens/mart/TransactionHistory';
+import KYCVerification from '../screens/profile/KYCVerification';
+import SOSLiveChat from '../screens/sos/SOSLiveChat';
+import Chat from '../screens/chat/Chat';
 
 // Import Bottom Tab Navigator
 import BottomTabNavigator from './BottomTabNavigator';
@@ -80,6 +83,9 @@ export type RootStackParamList = {
   Cart: undefined;
   Checkout: { cartItems?: any[]; total?: number };
   TransactionHistory: undefined;
+  KYCVerification: undefined;
+  SOSLiveChat: undefined;
+  Chat: { userName: string; userStatus: string };
 };
 
 // Create navigators
@@ -130,6 +136,9 @@ const AppNavigator = () => {
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Checkout" component={Checkout} />
         <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
+        <Stack.Screen name="KYCVerification" component={KYCVerification} />
+        <Stack.Screen name="SOSLiveChat" component={SOSLiveChat} />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     </NavigationContainer>
   );
