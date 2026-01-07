@@ -98,7 +98,9 @@ export const getAuthData = async (): Promise<AuthData | null> => {
  */
 export const isLoggedIn = async (): Promise<boolean> => {
   try {
-    const isLoggedInString = await AsyncStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN);
+    const isLoggedInString = await AsyncStorage.getItem(
+      STORAGE_KEYS.IS_LOGGED_IN,
+    );
     return isLoggedInString === 'true';
   } catch (error) {
     console.error('Error checking login status:', error);
@@ -123,3 +125,24 @@ export const clearAuthData = async (): Promise<void> => {
   }
 };
 
+/**
+ * Update user data in AsyncStorage with partial updates
+ */
+export const updateUserData = async (
+  updates: Partial<UserData>,
+): Promise<void> => {
+  try {
+    const currentUserData = await getUserData();
+    if (currentUserData) {
+      const updatedUserData = { ...currentUserData, ...updates };
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.USER_DATA,
+        JSON.stringify(updatedUserData),
+      );
+      console.log('User data updated successfully');
+    }
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    throw error;
+  }
+};

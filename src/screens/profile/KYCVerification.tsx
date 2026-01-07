@@ -14,6 +14,7 @@ import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 import { launchCamera, launchImageLibrary, Asset } from 'react-native-image-picker';
+import { updateUserData } from '../../services/storage';
 
 interface KYCVerificationProps {
     navigation: any;
@@ -137,11 +138,17 @@ export default function KYCVerification({ navigation }: KYCVerificationProps) {
         setIsSubmitting(true);
 
         // Simulate API call
-        setTimeout(() => {
+        setTimeout(async () => {
+            // Update KYC status in storage
+            await updateUserData({
+                kycStatus: 'verified',
+                isKycVerified: true
+            });
+
             Toast.show({
                 type: 'success',
                 text1: 'Verifikasi Berhasil',
-                text2: 'Data KYC Anda sedang diproses',
+                text2: 'Data KYC Anda telah diverifikasi otomatis',
                 position: 'top',
             });
             setIsSubmitting(false);

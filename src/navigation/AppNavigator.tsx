@@ -42,6 +42,8 @@ import KYCVerification from '../screens/profile/KYCVerification';
 import SOSLiveChat from '../screens/sos/SOSLiveChat';
 import Chat from '../screens/chat/Chat';
 import Bantuan from '../screens/akun/Bantuan';
+import Aspirasiku from '../screens/aspirasi/Aspirasiku';
+import AspirasiHistory from '../screens/aspirasi/AspirasiHistory';
 
 // Import Bottom Tab Navigator
 import BottomTabNavigator from './BottomTabNavigator';
@@ -88,6 +90,8 @@ export type RootStackParamList = {
   SOSLiveChat: undefined;
   Chat: { userName: string; userStatus: string };
   Bantuan: undefined;
+  Aspirasiku: undefined;
+  AspirasiHistory: undefined;
 };
 
 // Create navigators
@@ -142,6 +146,8 @@ const AppNavigator = () => {
         <Stack.Screen name="SOSLiveChat" component={SOSLiveChat} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="Bantuan" component={Bantuan} />
+        <Stack.Screen name="Aspirasiku" component={Aspirasiku} />
+        <Stack.Screen name="AspirasiHistory" component={AspirasiHistory} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 import { requireAuth, requireKyc } from '../../utils/authGuard';
 import { useAuth } from '../../hooks/useAuth';
+import { useIsFocused } from '@react-navigation/native';
 
 interface HomeProps {
   navigation: any;
@@ -36,7 +37,15 @@ export default function Home({ navigation }: HomeProps) {
     user,
     isLoading: authLoading,
     hasCompletedKyc,
+    refreshAuth,
   } = useAuth();
+  const isFocused = useIsFocused();
+
+  React.useEffect(() => {
+    if (isFocused) {
+      refreshAuth();
+    }
+  }, [isFocused]);
 
   // Additional padding for Samsung devices and devices with gesture navigation
   const getBottomPadding = () => {
@@ -710,7 +719,7 @@ export default function Home({ navigation }: HomeProps) {
                 </Text>
               </TouchableOpacity>
 
-              {/* PPOB */}
+              {/* Aspirasiku */}
               <TouchableOpacity
                 style={{
                   width: '22%',
@@ -718,8 +727,9 @@ export default function Home({ navigation }: HomeProps) {
                   marginBottom: normalize(20),
                 }}
                 onPress={() =>
-                  handleProtectedFeature('PPOB', () =>
-                    navigation.navigate('PPOB'),
+                  handleProtectedFeature('Aspirasiku', () =>
+                    navigation.navigate('Aspirasiku'),
+                    false,
                   )
                 }
               >
@@ -727,12 +737,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#96CEB4',
+                    backgroundColor: '#FFD93D',
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#96CEB4',
+                    shadowColor: '#FFD93D',
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -740,10 +750,11 @@ export default function Home({ navigation }: HomeProps) {
                     shadowOpacity: 0.3,
                     shadowRadius: 8,
                     elevation: 8,
+                    position: 'relative',
                   }}
                 >
                   <Icon
-                    name="credit-card"
+                    name="lightbulb"
                     size={normalize(24)}
                     color={COLOR.WHITE}
                     solid
@@ -757,7 +768,7 @@ export default function Home({ navigation }: HomeProps) {
                     textAlign: 'center',
                   }}
                 >
-                  PPOB
+                  Aspirasiku
                 </Text>
               </TouchableOpacity>
 

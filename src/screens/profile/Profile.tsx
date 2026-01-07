@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 import { useAuth } from '../../hooks/useAuth';
 import api from '../../services/api';
+import { useIsFocused } from '@react-navigation/native';
 
 interface ProfileProps {
   navigation: any;
@@ -31,7 +32,8 @@ interface MenuItem {
 
 export default function Profile({ navigation }: ProfileProps) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, refreshAuth } = useAuth();
+  const isFocused = useIsFocused();
   const [loading, setLoading] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>(null);
   const [saving, setSaving] = useState<boolean>(false);
@@ -60,8 +62,11 @@ export default function Profile({ navigation }: ProfileProps) {
       }
     };
 
-    fetchProfile();
-  }, [isAuthenticated, user?.id]);
+    if (isFocused) {
+      refreshAuth();
+      fetchProfile();
+    }
+  }, [isFocused, isAuthenticated, user?.id]);
 
   // Initialize edit form values when entering edit mode or when profile changes
   useEffect(() => {
@@ -250,7 +255,7 @@ export default function Profile({ navigation }: ProfileProps) {
 
           {/* KYC Status Badge */}
           <View style={{ marginTop: normalize(10) }}>
-            {profile?.isKycVerified ? (
+            {(profile?.isKycVerified || user?.isKycVerified) ? (
               <View
                 style={{
                   flexDirection: 'row',
