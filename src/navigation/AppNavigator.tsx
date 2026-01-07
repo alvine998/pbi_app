@@ -41,6 +41,7 @@ import TransactionHistory from '../screens/mart/TransactionHistory';
 import KYCVerification from '../screens/profile/KYCVerification';
 import SOSLiveChat from '../screens/sos/SOSLiveChat';
 import Chat from '../screens/chat/Chat';
+import Bantuan from '../screens/akun/Bantuan';
 
 // Import Bottom Tab Navigator
 import BottomTabNavigator from './BottomTabNavigator';
@@ -86,6 +87,7 @@ export type RootStackParamList = {
   KYCVerification: undefined;
   SOSLiveChat: undefined;
   Chat: { userName: string; userStatus: string };
+  Bantuan: undefined;
 };
 
 // Create navigators
@@ -139,6 +141,7 @@ const AppNavigator = () => {
         <Stack.Screen name="KYCVerification" component={KYCVerification} />
         <Stack.Screen name="SOSLiveChat" component={SOSLiveChat} />
         <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="Bantuan" component={Bantuan} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -219,53 +219,8 @@ export default function Akun({ navigation }: AkunProps) {
             elevation: 4,
           }}
         >
-          {isAuthenticated && (
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: normalize(15),
-                borderBottomWidth: 1,
-                borderBottomColor: '#F0F0F0',
-              }}
-            >
-              <View
-                style={{
-                  width: normalize(40),
-                  height: normalize(40),
-                  backgroundColor: '#4ECDC4',
-                  borderRadius: normalize(20),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: normalize(15),
-                }}
-              >
-                <Icon
-                  name="user-edit"
-                  size={normalize(18)}
-                  color={COLOR.WHITE}
-                  solid
-                />
-              </View>
-              <Text
-                style={{
-                  fontSize: normalize(16),
-                  color: COLOR.PRIMARY,
-                  flex: 1,
-                }}
-              >
-                Edit Profil
-              </Text>
-              <Icon
-                name="chevron-right"
-                size={normalize(14)}
-                color={COLOR.GRAY}
-                solid
-              />
-            </TouchableOpacity>
-          )}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -307,7 +262,7 @@ export default function Akun({ navigation }: AkunProps) {
               color={COLOR.GRAY}
               solid
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity
             style={{
@@ -405,6 +360,7 @@ export default function Akun({ navigation }: AkunProps) {
               alignItems: 'center',
               paddingVertical: normalize(15),
             }}
+            onPress={() => navigation.navigate('Bantuan')}
           >
             <View
               style={{
