@@ -96,7 +96,7 @@ export default function Home({ navigation }: HomeProps) {
     {
       id: 1,
       icon: 'star' as const,
-      title: 'Selamat Datang di Baramuda!',
+      title: 'Selamat Datang di PBI!',
       description: 'Nikmati pengalaman terbaik dengan fitur-fitur terbaru kami',
       color: COLOR.PRIMARY,
     },
@@ -203,9 +203,9 @@ export default function Home({ navigation }: HomeProps) {
     joinDate:
       isAuthenticated && user
         ? new Date(user.createdAt).toLocaleDateString('id-ID', {
-            month: 'long',
-            year: 'numeric',
-          })
+          month: 'long',
+          year: 'numeric',
+        })
         : '',
   };
 
@@ -262,17 +262,7 @@ export default function Home({ navigation }: HomeProps) {
           paddingHorizontal: normalize(20),
           paddingTop: normalize(50),
           paddingBottom: normalize(20),
-          backgroundColor: COLOR.SECONDARY,
-          borderBottomLeftRadius: normalize(20),
-          borderBottomRightRadius: normalize(20),
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.1,
-          shadowRadius: 3.84,
-          elevation: 5,
+          backgroundColor: COLOR.WHITE,
         }}
       >
         {/* Header Row - Search Bar and User Icon */}
@@ -890,7 +880,7 @@ export default function Home({ navigation }: HomeProps) {
                 onPress={() =>
                   handleProtectedFeature(
                     'SOS',
-                  () => navigation.navigate('SOS'),
+                    () => navigation.navigate('SOS'),
                   )
                 }
               >
@@ -1056,7 +1046,7 @@ export default function Home({ navigation }: HomeProps) {
                   lineHeight: normalize(22),
                 }}
               >
-                Update Fitur Terbaru Baramuda App
+                Update Fitur Terbaru PBI App
               </Text>
               <Text
                 style={{

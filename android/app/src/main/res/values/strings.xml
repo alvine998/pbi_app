@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Baramuda 08</string>
+    <string name="app_name">PBI</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">eQmDhDN3g7tO4V4778OdbSj7BsaTUFUkylz</string>
     <string moduleConfig="true" name="CodePushServerUrl">https://codepush.appsonair.com</string>
 </resources>

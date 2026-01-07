@@ -459,7 +459,7 @@ export default function NotificationDetail({
             textAlign: 'center',
           }}
         >
-          Baramuda 08 - Detail Notifikasi
+          PBI - Detail Notifikasi
         </Text>
       </View>
     </ScrollView>

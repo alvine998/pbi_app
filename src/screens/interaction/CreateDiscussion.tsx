@@ -78,7 +78,7 @@ export default function CreateDiscussion({ navigation }: { navigation: any }) {
             Buat Diskusi Baru
           </Text>
           <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(20) }}>
-            Sampaikan ide dan pertanyaan Anda kepada komunitas Baramuda.
+            Sampaikan ide dan pertanyaan Anda kepada komunitas PBI.
           </Text>
         </View>
         <View style={{ paddingHorizontal: normalize(20), paddingTop: normalize(24) }}>

@@ -77,11 +77,11 @@ export default function Profile({ navigation }: ProfileProps) {
   // Default user profile data (will be overridden by API data if available)
   const baseUserProfile = {
     name: 'Admin User',
-    email: 'admin@baramuda08.id',
+    email: 'admin@pbi.com',
     phone: '+62 812 3456 7890',
     joinDate: 'Oktober 2024',
     location: 'Jakarta, Indonesia',
-    bio: 'Relawan aktif Baramuda 08 yang berkomitmen untuk kemajuan Indonesia melalui dukungan penuh terhadap visi Asta Cita Presiden Prabowo Subianto.',
+    bio: 'Relawan aktif PBI yang berkomitmen untuk kemajuan Indonesia melalui dukungan penuh terhadap visi Asta Cita Presiden Prabowo Subianto.',
     avatar: 'https://via.placeholder.com/150x150/4A90E2/FFFFFF?text=AU',
     level: 'Bronze',
     points: 1250,
@@ -339,7 +339,7 @@ export default function Profile({ navigation }: ProfileProps) {
             textAlign: 'center',
           }}
         >
-          Baramuda 08 - Profil Relawan
+          PBI - Profil Relawan
         </Text>
       </View>
 

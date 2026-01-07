@@ -34,7 +34,7 @@ const VOLUNTEER_PROGRAMS = [
 ];
 
 const REQUIREMENTS = [
-  'Minimal usia 18 tahun dan bersedia mengikuti kode etik Baramuda.',
+  'Minimal usia 18 tahun dan bersedia mengikuti kode etik PBI.',
   'Memiliki komitmen minimal 1 bulan untuk program berjalan.',
   'Mengikuti sesi onboarding dan briefing bersama koordinator relawan.',
 ];
@@ -95,7 +95,7 @@ export default function Volunteer({ navigation }: { navigation: any }) {
           </TouchableOpacity>
 
           <Text style={{ fontSize: normalize(24), fontWeight: '700', color: COLOR.PRIMARY, marginBottom: normalize(6) }}>
-            Volunteer Baramuda
+            Volunteer PBI
           </Text>
           <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(20) }}>
             Pilih program yang sesuai dengan passion Anda dan jadilah bagian dari perubahan positif di komunitas.

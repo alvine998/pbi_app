@@ -78,7 +78,7 @@ export default function ForumDiskusi({ navigation }: { navigation: any }) {
             Forum Diskusi
           </Text>
           <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(20) }}>
-            Ruang diskusi hangat untuk berbagi ide, mencari solusi, dan terhubung dengan relawan serta penggerak Baramuda.
+            Ruang diskusi hangat untuk berbagi ide, mencari solusi, dan terhubung dengan relawan serta penggerak PBI.
           </Text>
         </View>
 

@@ -1,4 +1,4 @@
-package com.baramuda_app
+package com.pbi.app
 
 import android.app.Application
 import com.facebook.react.PackageList

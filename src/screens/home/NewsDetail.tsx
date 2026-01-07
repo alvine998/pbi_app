@@ -17,10 +17,10 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
   // Sample detailed news content with enhanced data
   const sampleNewsData = {
     id: newsId || 1,
-    title: newsTitle || 'Update Fitur Terbaru Baramuda App',
+    title: newsTitle || 'Update Fitur Terbaru PBI App',
     image: newsImage || 'https://via.placeholder.com/400x250/4A90E2/FFFFFF?text=News+Image',
     content: newsContent || `
-      Kami sangat excited untuk mengumumkan update terbaru dari Baramuda App yang akan meningkatkan pengalaman pengguna secara signifikan.
+      Kami sangat excited untuk mengumumkan update terbaru dari PBI App yang akan meningkatkan pengalaman pengguna secara signifikan.
 
       Fitur-fitur baru yang telah kami tambahkan meliputi:
 
@@ -39,13 +39,13 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
       🌐 Mode Offline yang Diperluas
       Pengguna sekarang dapat mengakses lebih banyak konten bahkan tanpa koneksi internet.
 
-      Update ini merupakan bagian dari komitmen kami untuk terus meningkatkan kualitas layanan dan memberikan pengalaman terbaik bagi seluruh pengguna Baramuda App.
+      Update ini merupakan bagian dari komitmen kami untuk terus meningkatkan kualitas layanan dan memberikan pengalaman terbaik bagi seluruh pengguna PBI App.
 
       Kami berterima kasih atas dukungan dan feedback yang telah diberikan oleh komunitas pengguna. Masukan dari Anda sangat berharga bagi pengembangan aplikasi ini.
 
       Untuk informasi lebih lanjut tentang update ini dan fitur-fitur lainnya, silakan kunjungi halaman bantuan atau hubungi customer service kami.
     `,
-    author: 'Tim Baramuda',
+    author: 'Tim PBI',
     authorAvatar: 'https://via.placeholder.com/40x40/4A90E2/FFFFFF?text=TB',
     date: '15 Oktober 2024',
     readTime: '5 menit baca',
@@ -58,7 +58,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.WHITE }}>
       <StatusBar backgroundColor={COLOR.PRIMARY} barStyle="light-content" />
-      
+
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
@@ -83,7 +83,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
               backgroundColor: 'rgba(0, 0, 0, 0.4)',
             }}
           />
-          
+
           {/* Header with Back Button */}
           <View
             style={{
@@ -108,12 +108,12 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                 alignItems: 'center',
               }}
             >
-                  <Icon
-                    name="arrow-left"
-                    size={normalize(18)}
-                    color={COLOR.WHITE}
-                    solid
-                  />
+              <Icon
+                name="arrow-left"
+                size={normalize(18)}
+                color={COLOR.WHITE}
+                solid
+              />
             </TouchableOpacity>
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -128,12 +128,12 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                   marginRight: normalize(10),
                 }}
               >
-                  <Icon
-                    name="bookmark"
-                    size={normalize(18)}
-                    color={COLOR.WHITE}
-                    solid
-                  />
+                <Icon
+                  name="bookmark"
+                  size={normalize(18)}
+                  color={COLOR.WHITE}
+                  solid
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 style={{
@@ -145,12 +145,12 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                   alignItems: 'center',
                 }}
               >
-                  <Icon
-                    name="share"
-                    size={normalize(18)}
-                    color={COLOR.WHITE}
-                    solid
-                  />
+                <Icon
+                  name="share"
+                  size={normalize(18)}
+                  color={COLOR.WHITE}
+                  solid
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -254,13 +254,13 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                 borderRadius: normalize(20),
               }}
             >
-                    <Icon
-                      name="eye"
-                      size={normalize(12)}
-                      color={COLOR.GRAY}
-                      solid
-                      style={{ marginRight: normalize(4) }}
-                    />
+              <Icon
+                name="eye"
+                size={normalize(12)}
+                color={COLOR.GRAY}
+                solid
+                style={{ marginRight: normalize(4) }}
+              />
               <Text
                 style={{
                   fontSize: normalize(12),
@@ -320,13 +320,13 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                 borderColor: '#FED7D7',
               }}
             >
-                    <Icon
-                      name="heart"
-                      size={normalize(16)}
-                      color="#E53E3E"
-                      solid
-                      style={{ marginRight: normalize(8) }}
-                    />
+              <Icon
+                name="heart"
+                size={normalize(16)}
+                color="#E53E3E"
+                solid
+                style={{ marginRight: normalize(8) }}
+              />
               <Text
                 style={{
                   fontSize: normalize(14),
@@ -350,13 +350,13 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                 borderColor: '#BEE3F8',
               }}
             >
-                    <Icon
-                      name="share"
-                      size={normalize(16)}
-                      color="#3182CE"
-                      solid
-                      style={{ marginRight: normalize(8) }}
-                    />
+              <Icon
+                name="share"
+                size={normalize(16)}
+                color="#3182CE"
+                solid
+                style={{ marginRight: normalize(8) }}
+              />
               <Text
                 style={{
                   fontSize: normalize(14),
@@ -380,13 +380,13 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
                 borderColor: '#C6F6D5',
               }}
             >
-                    <Icon
-                      name="bookmark"
-                      size={normalize(16)}
-                      color="#38A169"
-                      solid
-                      style={{ marginRight: normalize(8) }}
-                    />
+              <Icon
+                name="bookmark"
+                size={normalize(16)}
+                color="#38A169"
+                solid
+                style={{ marginRight: normalize(8) }}
+              />
               <Text
                 style={{
                   fontSize: normalize(14),

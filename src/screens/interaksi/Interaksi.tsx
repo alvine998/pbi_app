@@ -46,7 +46,7 @@ export default function Interaksi({ navigation }: InteraksiProps) {
             marginTop: normalize(8),
           }}
         >
-          Berinteraksi dengan komunitas Baramuda
+          Berinteraksi dengan komunitas PBI
         </Text>
       </View>
 
@@ -166,12 +166,12 @@ export default function Interaksi({ navigation }: InteraksiProps) {
                 marginRight: normalize(15),
               }}
             >
-            <Icon
-              name="users"
-              size={normalize(24)}
-              color={COLOR.WHITE}
-              solid
-            />
+              <Icon
+                name="users"
+                size={normalize(24)}
+                color={COLOR.WHITE}
+                solid
+              />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -229,12 +229,12 @@ export default function Interaksi({ navigation }: InteraksiProps) {
                 marginRight: normalize(15),
               }}
             >
-            <Icon
-              name="calendar-alt"
-              size={normalize(24)}
-              color={COLOR.WHITE}
-              solid
-            />
+              <Icon
+                name="calendar-alt"
+                size={normalize(24)}
+                color={COLOR.WHITE}
+                solid
+              />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -292,12 +292,12 @@ export default function Interaksi({ navigation }: InteraksiProps) {
                 marginRight: normalize(15),
               }}
             >
-            <Icon
-              name="heart"
-              size={normalize(24)}
-              color={COLOR.WHITE}
-              solid
-            />
+              <Icon
+                name="heart"
+                size={normalize(24)}
+                color={COLOR.WHITE}
+                solid
+              />
             </View>
             <View style={{ flex: 1 }}>
               <Text

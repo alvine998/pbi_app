@@ -27,22 +27,14 @@ export default function Prelogin({ navigation }: PreloginProps) {
   return (
     <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLOR.SECONDARY} />
-      
+
       {/* Header with gradient background */}
       <View
         style={{
           height: height * 0.45,
-          backgroundColor: COLOR.SECONDARY,
-          borderBottomLeftRadius: normalize(30),
-          borderBottomRightRadius: normalize(30),
           paddingTop: normalize(60),
           paddingHorizontal: normalize(20),
           alignItems: 'center',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-          elevation: 8,
         }}
       >
         {/* Logo and welcome text */}
@@ -52,7 +44,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
               width: normalize(120),
               height: normalize(120),
               borderRadius: normalize(60),
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              backgroundColor: COLOR.PRIMARY,
               justifyContent: 'center',
               alignItems: 'center',
               marginBottom: normalize(20),
@@ -64,15 +56,15 @@ export default function Prelogin({ navigation }: PreloginProps) {
             }}
           >
             <Image
-              source={require('../../assets/images/logo.png')}
+              source={require('../../assets/images/logo2.png')}
               style={{
-                width: normalize(80),
-                height: normalize(80),
+                width: normalize(150),
+                height: normalize(150),
                 borderRadius: normalize(40),
               }}
             />
           </View>
-          
+
           <Text
             style={{
               fontSize: normalize(28),
@@ -84,7 +76,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
           >
             Selamat Datang
           </Text>
-          
+
           <Text
             style={{
               fontSize: normalize(16),
@@ -93,7 +85,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
               lineHeight: normalize(22),
             }}
           >
-            Nikmati kemudahan layanan terbaik{'\n'}dengan Baramuda
+            Selamat Datang di Rumah Besar{'\n'}Perserikatan Baramuda Indonesia (PBI)
           </Text>
         </View>
       </View>

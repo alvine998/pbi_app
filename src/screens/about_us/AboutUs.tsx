@@ -10,14 +10,14 @@ interface AboutUsProps {
 
 export default function AboutUs({ navigation }: AboutUsProps) {
   const companyInfo = {
-    name: 'Baramuda 08 - Indonesia',
+    name: 'PBI',
     tagline: 'Kreatif untuk Indonesia',
     founded: '2024',
-    description: `Baramuda 08 adalah sebuah organisasi sosial masyarakat yang aktif di Indonesia, terutama dalam mendukung kampanye politik dan sosialisasi program-program dari Presiden Prabowo Subianto dalam mengawal asta cita.
+    description: `PBI adalah sebuah organisasi sosial masyarakat yang aktif di Indonesia, terutama dalam mendukung kampanye politik dan sosialisasi program-program dari Presiden Prabowo Subianto dalam mengawal asta cita.
 
 Organisasi ini beranggotakan para relawan yang sebelumnya menyatakan dukungannya kepada Prabowo Subianto sebagai calon presiden dan Gibran Rakabuming Raka sebagai calon wakil presiden.
 
-Dengan demikian, Baramuda 08 berfungsi sebagai rumah stabilitas pemuda dan pemudi Indonesia yang berusaha meningkatkan kualitas hidup masyarakat melalui dukungan kuat terhadap visi dan misi Prabowo-Gibran.`,
+Dengan demikian, PBI berfungsi sebagai rumah stabilitas pemuda dan pemudi Indonesia yang berusaha meningkatkan kualitas hidup masyarakat melalui dukungan kuat terhadap visi dan misi Prabowo-Gibran.`,
     mission:
       'Mendukung dan mensosialisasikan program-program Presiden Prabowo Subianto dalam mengawal asta cita untuk kemajuan Indonesia.',
     vision:
@@ -57,10 +57,10 @@ Dengan demikian, Baramuda 08 berfungsi sebagai rumah stabilitas pemuda dan pemud
       'Pengembangan Kepemimpinan Muda',
     ],
     contact: {
-      email: 'info@baramuda08.id',
+      email: 'info@pbi.com',
       phone: '+62 21 1234 5678',
       address: 'Jl. Politik No. 08, Jakarta Pusat, Indonesia',
-      website: 'www.baramuda08.id',
+      website: 'www.pbi.com',
     },
   };
 
@@ -131,7 +131,7 @@ Dengan demikian, Baramuda 08 berfungsi sebagai rumah stabilitas pemuda dan pemud
         }}
       >
         <Image
-          source={require('../../assets/images/logo.png')}
+          source={require('../../assets/images/logo2.png')}
           style={{
             width: normalize(80),
             height: normalize(80),
@@ -190,7 +190,7 @@ Dengan demikian, Baramuda 08 berfungsi sebagai rumah stabilitas pemuda dan pemud
               marginBottom: normalize(15),
             }}
           >
-            Tentang Baramuda
+            Tentang PBI
           </Text>
           <Text
             style={{
@@ -530,7 +530,7 @@ Dengan demikian, Baramuda 08 berfungsi sebagai rumah stabilitas pemuda dan pemud
             textAlign: 'center',
           }}
         >
-          © 2024 Baramuda 08 - Indonesia. Bersama untuk Asta Cita
+          © 2025 PBI - Indonesia. Bersama untuk Asta Cita
         </Text>
       </View>
     </ScrollView>

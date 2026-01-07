@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Storage keys
 const STORAGE_KEYS = {
-  USER_DATA: '@baramuda_user_data',
-  AUTH_TOKEN: '@baramuda_auth_token',
-  IS_LOGGED_IN: '@baramuda_is_logged_in',
+  USER_DATA: '@pbi_user_data',
+  AUTH_TOKEN: '@pbi_auth_token',
+  IS_LOGGED_IN: '@pbi_is_logged_in',
 };
 
 // User data interface

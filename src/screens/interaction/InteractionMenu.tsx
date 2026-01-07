@@ -30,7 +30,7 @@ const FEATURE_SHORTCUTS = [
   {
     id: 'volunteer',
     title: 'Volunteer',
-    description: 'Daftar untuk kegiatan sosial Baramuda.',
+    description: 'Daftar untuk kegiatan sosial PBI.',
     icon: 'hands-helping',
     route: 'Volunteer',
   },
@@ -41,7 +41,7 @@ const COMMUNITY_POSTS = [
     id: '1',
     author: 'Bambang S',
     time: '2 jam lalu',
-    content: 'Terima kasih tim Baramuda! Event pelatihan marketing sangat membantu UMKM kami meningkatkan penjualan.',
+    content: 'Terima kasih tim PBI! Event pelatihan marketing sangat membantu UMKM kami meningkatkan penjualan.',
     likes: 24,
     comments: 4,
   },
@@ -100,7 +100,7 @@ export default function InteractionMenu({ navigation }: { navigation: any }) {
             Ruang Interaksi
           </Text>
           <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(20) }}>
-            Terhubung dengan komunitas Baramuda: forum, kegiatan, dan kolaborasi terbaru untuk Anda.
+            Terhubung dengan komunitas PBI: forum, kegiatan, dan kolaborasi terbaru untuk Anda.
           </Text>
         </View>
 

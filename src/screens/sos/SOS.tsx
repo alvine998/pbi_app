@@ -8,8 +8,8 @@ import { COLOR } from '../../utils/Color';
 const EMERGENCY_SERVICES = [
   {
     id: 'call-center',
-    title: 'Call Center Baramuda',
-    description: 'Terhubung langsung dengan tim tanggap darurat Baramuda untuk penanganan cepat.',
+    title: 'Call Center PBI',
+    description: 'Terhubung langsung dengan tim tanggap darurat PBI untuk penanganan cepat.',
     icon: 'phone-alt',
     color: '#FF6B6B',
     action: () => Linking.openURL('tel:0211234567'),
@@ -51,7 +51,7 @@ const EMERGENCY_GUIDES = [
     title: 'Keadaan Darurat Bencana',
     steps: [
       'Ikuti jalur evakuasi yang telah ditetapkan.',
-      'Hubungi koordinator lapangan Baramuda terdekat.',
+      'Hubungi koordinator lapangan PBI terdekat.',
       'Gunakan alat komunikasi cadangan jika jaringan terputus.',
     ],
     icon: 'sign-out-alt',
@@ -98,7 +98,7 @@ export default function SOS({ navigation }: { navigation: any }) {
             Bantuan Darurat
           </Text>
           <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(20) }}>
-            Gunakan menu ini untuk menghubungi tim Baramuda dalam keadaan darurat atau mengikuti panduan keselamatan.
+            Gunakan menu ini untuk menghubungi tim PBI dalam keadaan darurat atau mengikuti panduan keselamatan.
           </Text>
         </View>
 
@@ -216,7 +216,7 @@ export default function SOS({ navigation }: { navigation: any }) {
           >
             <Text style={{ color: COLOR.PRIMARY, fontSize: normalize(12), lineHeight: normalize(18) }}>
               - Aktifkan lokasi real-time di perangkat Anda agar tim kami dapat menemukan Anda dengan cepat.{'\n'}
-              - Simpan nomor penting Baramuda pada kontak favorit Anda.{'\n'}
+              - Simpan nomor penting PBI pada kontak favorit Anda.{'\n'}
               - Periksa secara berkala perlengkapan P3K dan alat keselamatan di rumah atau kantor Anda.
             </Text>
           </View>

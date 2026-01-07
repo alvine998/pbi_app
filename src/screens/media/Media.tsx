@@ -31,7 +31,7 @@ export default function Media({ navigation }: MediaProps) {
       name: 'Facebook',
       icon: 'facebook-f',
       color: '#1877F2',
-      url: 'https://facebook.com/baramuda',
+      url: 'https://facebook.com/pbi',
       description: 'Ikuti kami di Facebook untuk update terbaru dan konten eksklusif',
     },
     {
@@ -39,23 +39,23 @@ export default function Media({ navigation }: MediaProps) {
       name: 'Instagram',
       icon: 'instagram',
       color: '#E4405F',
-      url: 'https://instagram.com/baramuda',
-      description: 'Lihat foto dan video menarik dari komunitas Baramuda',
+      url: 'https://instagram.com/pbi',
+      description: 'Lihat foto dan video menarik dari komunitas PBI',
     },
     {
       id: 3,
       name: 'TikTok',
       icon: 'play-circle',
       color: '#000000',
-      url: 'https://tiktok.com/@baramuda',
-      description: 'Video kreatif dan konten hiburan dari Baramuda',
+      url: 'https://tiktok.com/@pbi',
+      description: 'Video kreatif dan konten hiburan dari PBI',
     },
     {
       id: 4,
       name: 'YouTube',
       icon: 'youtube',
       color: '#FF0000',
-      url: 'https://youtube.com/channel/baramuda',
+      url: 'https://youtube.com/channel/pbi',
       description: 'Tutorial, review produk, dan konten video edukatif',
     },
     {
@@ -63,8 +63,8 @@ export default function Media({ navigation }: MediaProps) {
       name: 'X (Twitter)',
       icon: 'twitter',
       color: '#1DA1F2',
-      url: 'https://twitter.com/baramuda',
-      description: 'Update real-time dan berita terbaru dari Baramuda',
+      url: 'https://twitter.com/pbi',
+      description: 'Update real-time dan berita terbaru dari PBI',
     },
   ];
 
@@ -278,7 +278,7 @@ export default function Media({ navigation }: MediaProps) {
             lineHeight: normalize(18),
           }}
         >
-          Dapatkan update terbaru, konten eksklusif, dan berinteraksi dengan komunitas Baramuda
+          Dapatkan update terbaru, konten eksklusif, dan berinteraksi dengan komunitas PBI
         </Text>
       </View>
 
@@ -305,7 +305,7 @@ export default function Media({ navigation }: MediaProps) {
             textAlign: 'center',
           }}
         >
-          Baramuda App - Terhubung dengan dunia digital
+          PBI App - Terhubung dengan dunia digital
         </Text>
       </View>
     </ScrollView>

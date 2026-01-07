@@ -24,7 +24,7 @@ const POLL_DATA: PollItem[] = [
   {
     id: 'poll-1',
     question: 'Program prioritas komunitas di kuartal 2?',
-    description: 'Pilih agenda yang paling berdampak untuk komunitas Baramuda.',
+    description: 'Pilih agenda yang paling berdampak untuk komunitas PBI.',
     totalVotes: 187,
     deadline: '24 Maret 2025',
     options: [

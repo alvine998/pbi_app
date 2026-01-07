@@ -317,6 +317,7 @@ export default function Akun({ navigation }: AkunProps) {
               borderBottomWidth: 1,
               borderBottomColor: '#F0F0F0',
             }}
+            onPress={() => navigation.navigate('NotificationSettings')}
           >
             <View
               style={{
@@ -409,7 +410,7 @@ export default function Akun({ navigation }: AkunProps) {
           onPress={async () => {
             try {
               await clearAuthData();
-            } catch {}
+            } catch { }
             navigation.reset({
               index: 0,
               routes: [{ name: 'Prelogin' }],

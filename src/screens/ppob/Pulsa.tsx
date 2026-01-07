@@ -200,7 +200,7 @@ export default function Pulsa({ navigation }: PulsaProps) {
             <Text style={{ fontSize: normalize(16), fontWeight: '700', color: COLOR.SECONDARY }}>Lanjutkan Pembayaran</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: normalize(12), color: COLOR.GRAY, marginTop: normalize(10), lineHeight: normalize(18) }}>
-            Dengan melanjutkan, Anda menyetujui syarat & ketentuan transaksi PPOB Baramuda. Bukti pembayaran akan dikirim melalui email terdaftar.
+            Dengan melanjutkan, Anda menyetujui syarat & ketentuan transaksi PPOB PBI. Bukti pembayaran akan dikirim melalui email terdaftar.
           </Text>
         </View>
       </ScrollView>

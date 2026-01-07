@@ -34,6 +34,7 @@ import Volunteer from '../screens/interaction/Volunteer';
 import CreateDiscussion from '../screens/interaction/CreateDiscussion';
 import DiscussionDetail from '../screens/interaction/DiscussionDetail';
 import SOS from '../screens/sos/SOS';
+import NotificationSettings from '../screens/notification/NotificationSettings';
 
 // Import Bottom Tab Navigator
 import BottomTabNavigator from './BottomTabNavigator';
@@ -72,6 +73,7 @@ export type RootStackParamList = {
   Volunteer: undefined;
   CreateDiscussion: undefined;
   DiscussionDetail: { discussionId?: string };
+  NotificationSettings: undefined;
 };
 
 // Create navigators
@@ -118,6 +120,7 @@ const AppNavigator = () => {
         <Stack.Screen name="Volunteer" component={Volunteer} />
         <Stack.Screen name="CreateDiscussion" component={CreateDiscussion} />
         <Stack.Screen name="DiscussionDetail" component={DiscussionDetail} />
+        <Stack.Screen name="NotificationSettings" component={NotificationSettings} />
       </Stack.Navigator>
     </NavigationContainer>
   );

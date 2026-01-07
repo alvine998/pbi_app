@@ -51,7 +51,7 @@ export default function Notification({ navigation }: NotificationProps) {
     {
       id: 3,
       title: 'Undangan Rapat Koordinasi',
-      message: 'Rapat koordinasi Baramuda 08 akan dilaksanakan hari Minggu pukul 10:00 WIB di kantor pusat. Kehadiran wajib.',
+      message: 'Rapat koordinasi PBI akan dilaksanakan hari Minggu pukul 10:00 WIB di kantor pusat. Kehadiran wajib.',
       time: '1 hari yang lalu',
       type: 'warning',
       read: true,
@@ -96,7 +96,7 @@ export default function Notification({ navigation }: NotificationProps) {
     {
       id: 8,
       title: 'Pembaruan Sistem',
-      message: 'Aplikasi Baramuda 08 telah diperbarui dengan fitur baru untuk memudahkan koordinasi antar relawan.',
+      message: 'Aplikasi PBI telah diperbarui dengan fitur baru untuk memudahkan koordinasi antar relawan.',
       time: '1 minggu yang lalu',
       type: 'info',
       read: true,
@@ -516,7 +516,7 @@ export default function Notification({ navigation }: NotificationProps) {
             textAlign: 'center',
           }}
         >
-          Baramuda 08 - Update & Informasi
+          PBI - Update & Informasi
         </Text>
       </View>
     </ScrollView>

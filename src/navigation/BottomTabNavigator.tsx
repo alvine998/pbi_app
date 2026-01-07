@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COLOR } from '../utils/Color';
 import normalize from 'react-native-normalize';
+import { isLoggedIn } from '../services/storage';
+import { useNavigation } from '@react-navigation/native';
 
 // Import screens
 import Home from '../screens/home/Home';
@@ -25,7 +27,26 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const BottomTabNavigator = () => {
   const insets = useSafeAreaInsets();
-  
+  const navigation = useNavigation();
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
+
+  // Check login status on mount and when screen is focused
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const loggedIn = await isLoggedIn();
+      setUserLoggedIn(loggedIn);
+    };
+
+    checkLoginStatus();
+
+    // Add focus listener to recheck login status when returning to this screen
+    const unsubscribe = navigation.addListener('focus', () => {
+      checkLoginStatus();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   // Additional padding for Samsung devices and devices with gesture navigation
   const getBottomPadding = () => {
     if (Platform.OS === 'android') {
@@ -34,7 +55,7 @@ const BottomTabNavigator = () => {
     }
     return insets.bottom;
   };
-  
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -112,6 +133,35 @@ const BottomTabNavigator = () => {
         component={InteractionMenu}
         options={{
           tabBarLabel: 'Interaksi',
+        }}
+        listeners={{
+          tabPress: (e) => {
+            // Prevent default action if not logged in
+            if (!userLoggedIn) {
+              e.preventDefault();
+
+              // Show alert prompting user to login
+              Alert.alert(
+                'Login Diperlukan',
+                'Anda harus login terlebih dahulu untuk mengakses fitur Interaksi.',
+                [
+                  {
+                    text: 'Batal',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Login',
+                    onPress: () => {
+                      // Navigate to login screen
+                      // @ts-ignore - navigation is available in the context
+                      navigation.navigate('Login');
+                    },
+                  },
+                ],
+                { cancelable: true }
+              );
+            }
+          },
         }}
       />
       <Tab.Screen

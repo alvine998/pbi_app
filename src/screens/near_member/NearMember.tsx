@@ -57,7 +57,7 @@ export default function NearMember({ navigation }: { navigation: any }) {
             Anggota di Sekitarmu
           </Text>
           <Text style={{ fontSize: normalize(14), color: COLOR.DARK_GRAY, lineHeight: normalize(20) }}>
-            Temukan dan jalin kolaborasi dengan anggota Baramuda yang berada dekat dengan lokasi Anda.
+            Temukan dan jalin kolaborasi dengan anggota PBI yang berada dekat dengan lokasi Anda.
           </Text>
         </View>
 
