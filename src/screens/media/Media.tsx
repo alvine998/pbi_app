@@ -225,24 +225,7 @@ export default function Media({ navigation }: MediaProps) {
           Media Sosial
         </Text>
 
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={{
-            width: normalize(40),
-            height: normalize(40),
-            borderRadius: normalize(20),
-            backgroundColor: COLOR.PRIMARY,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Icon
-            name="bars"
-            size={normalize(16)}
-            color={COLOR.SECONDARY}
-            solid
-          />
-        </TouchableOpacity>
+        <View style={{ width: normalize(40) }} />
       </View>
 
       {/* Header Info */}

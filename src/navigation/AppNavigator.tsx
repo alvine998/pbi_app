@@ -35,6 +35,9 @@ import CreateDiscussion from '../screens/interaction/CreateDiscussion';
 import DiscussionDetail from '../screens/interaction/DiscussionDetail';
 import SOS from '../screens/sos/SOS';
 import NotificationSettings from '../screens/notification/NotificationSettings';
+import Cart from '../screens/mart/Cart';
+import Checkout from '../screens/mart/Checkout';
+import TransactionHistory from '../screens/mart/TransactionHistory';
 
 // Import Bottom Tab Navigator
 import BottomTabNavigator from './BottomTabNavigator';
@@ -74,6 +77,9 @@ export type RootStackParamList = {
   CreateDiscussion: undefined;
   DiscussionDetail: { discussionId?: string };
   NotificationSettings: undefined;
+  Cart: undefined;
+  Checkout: { cartItems?: any[]; total?: number };
+  TransactionHistory: undefined;
 };
 
 // Create navigators
@@ -121,6 +127,9 @@ const AppNavigator = () => {
         <Stack.Screen name="CreateDiscussion" component={CreateDiscussion} />
         <Stack.Screen name="DiscussionDetail" component={DiscussionDetail} />
         <Stack.Screen name="NotificationSettings" component={NotificationSettings} />
+        <Stack.Screen name="Cart" component={Cart} />
+        <Stack.Screen name="Checkout" component={Checkout} />
+        <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
       </Stack.Navigator>
     </NavigationContainer>
   );

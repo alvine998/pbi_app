@@ -117,7 +117,7 @@ Dengan demikian, PBI berfungsi sebagai rumah stabilitas pemuda dan pemudi Indone
         style={{
           alignItems: 'center',
           paddingVertical: normalize(30),
-          backgroundColor: COLOR.WHITE,
+          backgroundColor: COLOR.PRIMARY,
           margin: normalize(20),
           borderRadius: normalize(20),
           elevation: 3,
@@ -133,8 +133,8 @@ Dengan demikian, PBI berfungsi sebagai rumah stabilitas pemuda dan pemudi Indone
         <Image
           source={require('../../assets/images/logo2.png')}
           style={{
-            width: normalize(80),
-            height: normalize(80),
+            width: normalize(120),
+            height: normalize(120),
             borderRadius: normalize(40),
           }}
         />
@@ -142,7 +142,7 @@ Dengan demikian, PBI berfungsi sebagai rumah stabilitas pemuda dan pemudi Indone
           style={{
             fontSize: normalize(24),
             fontWeight: 'bold',
-            color: COLOR.PRIMARY,
+            color: COLOR.SECONDARY,
             marginBottom: normalize(8),
           }}
         >

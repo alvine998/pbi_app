@@ -67,6 +67,11 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
       text2: `${currentProduct.name} telah ditambahkan ke keranjang`,
       position: 'top',
     });
+
+    // Navigate to cart after a short delay
+    setTimeout(() => {
+      navigation.navigate('Cart');
+    }, 1000);
   };
 
   const handleBuyNow = () => {
@@ -122,7 +127,7 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate('Mart')}
+          onPress={() => navigation.goBack()}
           style={{
             width: normalize(40),
             height: normalize(40),
@@ -439,6 +444,7 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
           style={{
             flexDirection: 'row',
             marginBottom: normalize(30),
+            gap: normalize(10),
           }}
         >
           <TouchableOpacity
@@ -448,9 +454,11 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
               borderWidth: 2,
               borderColor: COLOR.PRIMARY,
               borderRadius: normalize(10),
-              padding: normalize(15),
-              marginRight: normalize(10),
+              paddingVertical: normalize(15),
+              paddingHorizontal: normalize(10),
               alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'row',
             }}
             onPress={handleAddToCart}
           >
@@ -460,10 +468,10 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
                 fontSize: normalize(14),
                 fontWeight: 'bold',
                 color: COLOR.PRIMARY,
-                marginTop: normalize(5),
+                marginLeft: normalize(8),
               }}
             >
-              Tambah Keranjang
+              Keranjang
             </Text>
           </TouchableOpacity>
 
@@ -472,9 +480,10 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
               flex: 1,
               backgroundColor: COLOR.PRIMARY,
               borderRadius: normalize(10),
-              padding: normalize(15),
-              marginLeft: normalize(10),
+              paddingVertical: normalize(15),
+              paddingHorizontal: normalize(10),
               alignItems: 'center',
+              justifyContent: 'center',
             }}
             onPress={handleBuyNow}
           >

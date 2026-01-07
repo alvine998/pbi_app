@@ -357,6 +357,7 @@ export default function Home({ navigation }: HomeProps) {
         style={{
           flex: 1,
           backgroundColor: COLOR.WHITE,
+          zIndex: 1,
         }}
         contentContainerStyle={{
           paddingTop: normalize(120), // Account for sticky header height
@@ -371,6 +372,7 @@ export default function Home({ navigation }: HomeProps) {
             tintColor={COLOR.PRIMARY}
             title="Menarik untuk memperbarui..."
             titleColor={COLOR.PRIMARY}
+            progressViewOffset={normalize(120)}
           />
         }
       >
