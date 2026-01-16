@@ -4,6 +4,8 @@ import Toast from 'react-native-toast-message';
 // import CodePush from '@code-push-next/react-native-code-push';
 // import { Platform, NativeModules } from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
+import { AuthProvider } from './src/context/AuthContext';
+import { NavigationContainer } from '@react-navigation/native';
 
 // CodePush configuration temporarily disabled for debugging
 // const getCodePushConfig = () => {
@@ -81,11 +83,16 @@ import AppNavigator from './src/navigation/AppNavigator';
 //   console.log(`CodePush: Downloaded ${progress.receivedBytes} of ${progress.totalBytes} bytes`);
 // };
 
+
 function App() {
   return (
     <SafeAreaProvider>
-      <AppNavigator />
-      <Toast />
+      <AuthProvider>
+        <NavigationContainer>
+          <AppNavigator />
+          <Toast />
+        </NavigationContainer>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

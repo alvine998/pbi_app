@@ -19,6 +19,7 @@ import Toast from 'react-native-toast-message';
 import { requireAuth, requireKyc } from '../../utils/authGuard';
 import { useAuth } from '../../hooks/useAuth';
 import { useIsFocused } from '@react-navigation/native';
+import api from '../../services/api';
 
 interface HomeProps {
   navigation: any;
@@ -40,12 +41,6 @@ export default function Home({ navigation }: HomeProps) {
     refreshAuth,
   } = useAuth();
   const isFocused = useIsFocused();
-
-  React.useEffect(() => {
-    if (isFocused) {
-      refreshAuth();
-    }
-  }, [isFocused]);
 
   // Additional padding for Samsung devices and devices with gesture navigation
   const getBottomPadding = () => {
@@ -125,41 +120,34 @@ export default function Home({ navigation }: HomeProps) {
     },
   ];
 
-  const newsData = [
-    {
-      id: 1,
-      title: 'Update Fitur Terbaru PBI App',
-      description: 'Kami telah menambahkan fitur-fitur menarik untuk meningkatkan pengalaman pengguna.',
-      content: 'Kami sangat excited untuk mengumumkan update terbaru dari PBI App yang akan meningkatkan pengalaman pengguna secara signifikan. Fitur-fitur baru meliputi sistem notifikasi cerdas, antarmuka pengguna yang diperbarui, dan keamanan data yang ditingkatkan.',
-      image: 'https://images.unsplash.com/photo-1573163231162-73573d99e2b0?q=80&w=2069&auto=format&fit=crop',
-      time: '2 jam yang lalu',
-      category: 'Update',
-      icon: 'newspaper',
-      bgColor: '#667eea'
-    },
-    {
-      id: 2,
-      title: 'Keamanan Data Terjamin',
-      description: 'Sistem keamanan terbaru telah diimplementasikan untuk melindungi data pengguna.',
-      content: 'Privasi dan keamanan data Anda adalah prioritas utama kami. Kami baru saja meningkatkan infrastruktur keamanan kami dengan enkripsi tingkat lanjut dan protokol autentikasi multi-faktor.',
-      image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop',
-      time: '5 jam yang lalu',
-      category: 'Keamanan',
-      icon: 'shield-alt',
-      bgColor: '#4ECDC4'
-    },
-    {
-      id: 3,
-      title: 'Peluncuran Fitur Baru',
-      description: 'Fitur inovatif telah diluncurkan untuk memudahkan aktivitas pengguna sehari-hari.',
-      content: 'Nikmati kemudahan akses ke berbagai layanan PBI hanya dengan satu ketukan. Fitur baru ini dirancang untuk mempercepat proses transaksi dan interaksi antar anggota.',
-      image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop',
-      time: '1 hari yang lalu',
-      category: 'Inovasi',
-      icon: 'rocket',
-      bgColor: '#FECA57'
+  const [news, setNews] = React.useState<any[]>([]);
+  const [isNewsLoading, setIsNewsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    if (isFocused && news.length === 0) {
+      fetchLatestNews();
     }
-  ];
+  }, [isFocused, news.length]);
+
+  const fetchLatestNews = async () => {
+    setIsNewsLoading(true);
+    try {
+      const response = await api.get('/news', {
+        params: {
+          limit: 3,
+          page: 1,
+          status: 'Published'
+        }
+      });
+      if (response.data && response.data.items) {
+        setNews(response.data.items);
+      }
+    } catch (error) {
+      console.error('Error fetching latest news:', error);
+    } finally {
+      setIsNewsLoading(false);
+    }
+  };
 
   // Auto-advance carousel
   React.useEffect(() => {
@@ -213,11 +201,6 @@ export default function Home({ navigation }: HomeProps) {
     }
   };
 
-  React.useEffect(() => {
-    console.log('hasCompletedKyc', hasCompletedKyc);
-    console.log('isAuthenticated', isAuthenticated);
-    console.log('user', user);
-  }, [hasCompletedKyc, isAuthenticated, user]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -490,11 +473,11 @@ export default function Home({ navigation }: HomeProps) {
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Profile')}
                   style={{
-                    backgroundColor: '#1A73E8',
+                    backgroundColor: COLOR.PRIMARY,
                     paddingHorizontal: normalize(20),
                     paddingVertical: normalize(12),
                     borderRadius: normalize(25),
-                    shadowColor: '#1A73E8',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -1015,142 +998,161 @@ export default function Home({ navigation }: HomeProps) {
             </TouchableOpacity>
           </View>
 
-          {newsData.map((news) => (
-            <TouchableOpacity
-              key={news.id}
-              style={{
-                backgroundColor: COLOR.WHITE,
-                borderRadius: normalize(16),
-                marginBottom: normalize(16),
-                overflow: 'hidden',
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 4,
-                },
-                shadowOpacity: 0.1,
-                shadowRadius: 12,
-                elevation: 8,
-              }}
-              onPress={() => navigation.navigate('NewsDetail', {
-                newsId: news.id,
-                newsTitle: news.title,
-                newsContent: news.content,
-                newsImage: news.image
-              })}
-              activeOpacity={0.9}
-            >
-              <View
+          {isNewsLoading ? (
+            <View style={{ alignItems: 'center', paddingVertical: normalize(20) }}>
+              <Text style={{ color: COLOR.GRAY }}>Memuat berita...</Text>
+            </View>
+          ) : (
+            news.map((item) => (
+              <TouchableOpacity
+                key={item.id}
                 style={{
-                  height: normalize(140),
-                  backgroundColor: news.bgColor,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position: 'relative',
+                  backgroundColor: COLOR.WHITE,
+                  borderRadius: normalize(16),
+                  marginBottom: normalize(16),
+                  overflow: 'hidden',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 4,
+                  },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 12,
+                  elevation: 8,
                 }}
+                onPress={() => navigation.navigate('NewsDetail', {
+                  newsId: item.id,
+                  newsTitle: item.title,
+                  newsContent: item.content,
+                  newsImage: item.image,
+                  newsTime: new Date(item.createdAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                  }),
+                  newsCategory: item.category
+                })}
+                activeOpacity={0.9}
               >
-                <Image
-                  source={{ uri: news.image }}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    opacity: 0.6,
-                  }}
-                />
                 <View
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                  }}
-                />
-                <Icon
-                  name={news.icon}
-                  size={normalize(40)}
-                  color={COLOR.WHITE}
-                  solid
-                  style={{ zIndex: 1 }}
-                />
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: normalize(12),
-                    right: normalize(12),
-                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                    paddingHorizontal: normalize(8),
-                    paddingVertical: normalize(4),
-                    borderRadius: normalize(12),
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: normalize(10),
-                      fontWeight: '600',
-                      color: COLOR.WHITE,
-                    }}
-                  >
-                    {news.category.toUpperCase()}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  padding: normalize(16),
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: normalize(16),
-                    fontWeight: 'bold',
-                    color: COLOR.PRIMARY,
-                    marginBottom: normalize(8),
-                    lineHeight: normalize(22),
-                  }}
-                >
-                  {news.title}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: normalize(13),
-                    color: COLOR.GRAY,
-                    lineHeight: normalize(18),
-                    marginBottom: normalize(12),
-                  }}
-                  numberOfLines={2}
-                >
-                  {news.description}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    height: normalize(140),
+                    backgroundColor: COLOR.SECONDARY,
+                    justifyContent: 'center',
                     alignItems: 'center',
+                    position: 'relative',
+                  }}
+                >
+                  {item.image ? (
+                    <Image
+                      source={{ uri: item.image }}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        opacity: 0.6,
+                      }}
+                    />
+                  ) : (
+                    <Icon
+                      name="newspaper"
+                      size={normalize(40)}
+                      color={COLOR.PRIMARY}
+                      solid
+                      style={{ zIndex: 1 }}
+                    />
+                  )}
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                    }}
+                  />
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: normalize(12),
+                      right: normalize(12),
+                      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                      paddingHorizontal: normalize(8),
+                      paddingVertical: normalize(4),
+                      borderRadius: normalize(12),
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: normalize(10),
+                        fontWeight: '600',
+                        color: COLOR.WHITE,
+                      }}
+                    >
+                      {(item.category || 'Berita').toUpperCase()}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    padding: normalize(16),
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: normalize(11),
-                      color: COLOR.GRAY,
+                      fontSize: normalize(16),
+                      fontWeight: 'bold',
+                      color: COLOR.PRIMARY,
+                      marginBottom: normalize(8),
+                      lineHeight: normalize(22),
                     }}
                   >
-                    {news.time}
+                    {item.title}
                   </Text>
-                  <Icon
-                    name="arrow-right"
-                    size={normalize(12)}
-                    color={COLOR.PRIMARY}
-                    solid
-                  />
+                  <Text
+                    style={{
+                      fontSize: normalize(13),
+                      color: COLOR.GRAY,
+                      lineHeight: normalize(18),
+                      marginBottom: normalize(12),
+                    }}
+                    numberOfLines={2}
+                  >
+                    {item.content ? item.content.replace(/<[^>]*>?/gm, '').substring(0, 100) : ''}...
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: normalize(11),
+                        color: COLOR.GRAY,
+                      }}
+                    >
+                      {new Date(item.createdAt).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </Text>
+                    <Icon
+                      name="arrow-right"
+                      size={normalize(12)}
+                      color={COLOR.PRIMARY}
+                      solid
+                    />
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          ))}
+              </TouchableOpacity>
+            ))
+          )}
         </View>
       </ScrollView>
     </View>

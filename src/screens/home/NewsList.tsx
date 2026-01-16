@@ -13,6 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLOR } from '../../utils/Color';
 import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import api from '../../services/api';
+import { ActivityIndicator } from 'react-native';
 
 const NEWS_CATEGORIES = ['Semua', 'Update', 'Keamanan', 'Kegiatan', 'Tips'];
 
@@ -67,38 +69,85 @@ export default function NewsList({ navigation }: { navigation: any }) {
     const insets = useSafeAreaInsets();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Semua');
+    const [news, setNews] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const filteredNews = newsData.filter(item => {
-        const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const fetchNews = async (refresh = false) => {
+        if (refresh) setIsRefreshing(true);
+        else setIsLoading(true);
+
+        try {
+            const response = await api.get('/news', {
+                params: {
+                    limit: 20,
+                    page: 1,
+                    status: 'Published'
+                }
+            });
+
+            if (response.data && response.data.items) {
+                setNews(response.data.items);
+            }
+        } catch (error) {
+            console.error('Error fetching news:', error);
+        } finally {
+            setIsLoading(false);
+            setIsRefreshing(false);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchNews();
+    }, []);
+
+    const filteredNews = news.filter(item => {
+        const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = selectedCategory === 'Semua' || item.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
 
-    const renderNewsCard = ({ item }: { item: typeof newsData[0] }) => (
+    const renderNewsCard = ({ item }: { item: any }) => (
         <TouchableOpacity
             style={styles.newsCard}
             onPress={() => navigation.navigate('NewsDetail', {
                 newsId: item.id,
                 newsTitle: item.title,
                 newsContent: item.content,
-                newsImage: item.image
+                newsImage: item.image,
+                newsTime: new Date(item.createdAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }),
+                newsCategory: item.category
             })}
             activeOpacity={0.9}
         >
-            <View style={[styles.cardImageContainer, { backgroundColor: item.bgColor }]}>
-                <Image source={{ uri: item.image }} style={styles.cardImage} />
+            <View style={[styles.cardImageContainer, { backgroundColor: COLOR.SECONDARY }]}>
+                {item.image ? (
+                    <Image source={{ uri: item.image }} style={styles.cardImage} />
+                ) : (
+                    <Icon name="newspaper" size={normalize(30)} color={COLOR.PRIMARY} solid />
+                )}
                 <View style={styles.cardImageOverlay} />
-                <Icon name={item.icon} size={normalize(30)} color={COLOR.WHITE} solid style={styles.cardIcon} />
                 <View style={styles.cardBadge}>
-                    <Text style={styles.cardBadgeText}>{item.category.toUpperCase()}</Text>
+                    <Text style={styles.cardBadgeText}>{(item.category || 'Berita').toUpperCase()}</Text>
                 </View>
             </View>
             <View style={styles.cardContent}>
                 <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
-                <Text style={styles.cardDescription} numberOfLines={2}>{item.description}</Text>
+                <Text style={styles.cardDescription} numberOfLines={2}>
+                    {item.content ? item.content.replace(/<[^>]*>?/gm, '').substring(0, 100) : ''}...
+                </Text>
                 <View style={styles.cardFooter}>
-                    <Text style={styles.cardTime}>{item.time}</Text>
+                    <Text style={styles.cardTime}>
+                        {new Date(item.createdAt).toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        })}
+                    </Text>
                     <Icon name="arrow-right" size={normalize(12)} color={COLOR.PRIMARY} solid />
                 </View>
             </View>
@@ -156,19 +205,28 @@ export default function NewsList({ navigation }: { navigation: any }) {
                 </ScrollView>
             </View>
 
-            <FlatList
-                data={filteredNews}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderNewsCard}
-                contentContainerStyle={styles.listContent}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={
-                    <View style={styles.emptyContainer}>
-                        <Icon name="newspaper" size={normalize(60)} color={COLOR.GRAY} solid />
-                        <Text style={styles.emptyText}>Tidak ada berita ditemukan.</Text>
-                    </View>
-                }
-            />
+            {isLoading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+                    <Text style={styles.loadingText}>Memuat berita...</Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={filteredNews}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderNewsCard}
+                    contentContainerStyle={styles.listContent}
+                    showsVerticalScrollIndicator={false}
+                    refreshing={isRefreshing}
+                    onRefresh={() => fetchNews(true)}
+                    ListEmptyComponent={
+                        <View style={styles.emptyContainer}>
+                            <Icon name="newspaper" size={normalize(60)} color={COLOR.GRAY} solid />
+                            <Text style={styles.emptyText}>Tidak ada berita ditemukan.</Text>
+                        </View>
+                    }
+                />
+            )}
         </View>
     );
 }
@@ -341,5 +399,15 @@ const styles = StyleSheet.create({
         fontSize: normalize(14),
         color: COLOR.GRAY,
         marginTop: normalize(16),
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        marginTop: normalize(10),
+        color: COLOR.PRIMARY,
+        fontSize: normalize(14),
     },
 });

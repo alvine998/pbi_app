@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, StatusBar } from 'react-native';
 import React, { useState } from 'react';
 import normalize from 'react-native-normalize';
 import { COLOR } from '../../utils/Color';
@@ -48,9 +48,10 @@ export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
       style={{
         flex: 1,
         padding: normalize(20),
-        backgroundColor: COLOR.SECONDARY,
+        backgroundColor: COLOR.PRIMARY,
       }}
     >
+      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
       {/* Header */}
       <View
         style={{
@@ -65,14 +66,14 @@ export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
             solid
             name="chevron-left"
             size={normalize(20)}
-            color={COLOR.PRIMARY}
+            color={COLOR.WHITE}
           />
         </TouchableOpacity>
         <Text
           style={{
             fontSize: normalize(20),
             fontWeight: 'bold',
-            color: COLOR.PRIMARY,
+            color: COLOR.WHITE,
           }}
         >
           Lupa Password
@@ -81,7 +82,7 @@ export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
       </View>
 
       <View style={{ marginTop: normalize(20) }}>
-        <Text style={{ fontSize: normalize(16), textAlign: 'justify' }}>
+        <Text style={{ fontSize: normalize(16), textAlign: 'justify', color: COLOR.SECONDARY }}>
           Masukkan alamat email anda untuk mendapatkan kode OTP dan melakukan
           reset password
         </Text>
@@ -116,7 +117,7 @@ export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
 
       <TouchableOpacity
         style={{
-          backgroundColor: COLOR.WHITE,
+          backgroundColor: COLOR.SECONDARY,
           padding: normalize(20),
           borderRadius: normalize(10),
           marginTop: normalize(20),
@@ -126,7 +127,7 @@ export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
       >
         <Text
           style={{
-            color: COLOR.BLACK,
+            color: COLOR.PRIMARY,
             fontSize: normalize(16),
             textAlign: 'center',
             fontWeight: 'bold',

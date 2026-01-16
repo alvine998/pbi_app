@@ -15,6 +15,8 @@ import Interaksi from '../screens/interaksi/Interaksi';
 import Akun from '../screens/akun/Akun';
 import InteractionMenu from '../screens/interaction/InteractionMenu';
 
+import { useAuth } from '../hooks/useAuth';
+
 // Define tab param list
 export type BottomTabParamList = {
   Beranda: undefined;
@@ -28,24 +30,7 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 const BottomTabNavigator = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
-
-  // Check login status on mount and when screen is focused
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const loggedIn = await isLoggedIn();
-      setUserLoggedIn(loggedIn);
-    };
-
-    checkLoginStatus();
-
-    // Add focus listener to recheck login status when returning to this screen
-    const unsubscribe = navigation.addListener('focus', () => {
-      checkLoginStatus();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  const { isAuthenticated } = useAuth();
 
   // Additional padding for Samsung devices and devices with gesture navigation
   const getBottomPadding = () => {
@@ -137,7 +122,7 @@ const BottomTabNavigator = () => {
         listeners={{
           tabPress: (e) => {
             // Prevent default action if not logged in
-            if (!userLoggedIn) {
+            if (!isAuthenticated) {
               e.preventDefault();
 
               // Show alert prompting user to login

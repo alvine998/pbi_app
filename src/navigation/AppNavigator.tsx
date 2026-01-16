@@ -1,6 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, ActivityIndicator } from 'react-native';
+import { useAuth } from '../hooks/useAuth';
+import { COLOR } from '../utils/Color';
 
 // Import screens
 import Prelogin from '../screens/prelogin/Prelogin';
@@ -100,59 +102,73 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.WHITE }}>
+        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+      </View>
+    );
+  }
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Prelogin"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="Prelogin" component={Prelogin} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-        <Stack.Screen name="MainApp" component={BottomTabNavigator} />
-        <Stack.Screen name="NewsDetail" component={NewsDetail} />
-        <Stack.Screen name="NewsList" component={NewsList} />
-        <Stack.Screen name="ProductDetail" component={ProductDetail} />
-        <Stack.Screen name="Media" component={Media} />
-        <Stack.Screen name="AboutUs" component={AboutUs} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
-        <Stack.Screen name="Event" component={Event} />
-        <Stack.Screen name="PPOB" component={PPOB} />
-        <Stack.Screen name="Pulsa" component={Pulsa} />
-        <Stack.Screen name="PaketData" component={PaketData} />
-        <Stack.Screen name="ListrikPrabayar" component={ListrikPrabayar} />
-        <Stack.Screen name="ListrikPascabayar" component={ListrikPascabayar} />
-        <Stack.Screen name="AirPDAM" component={AirPDAM} />
-        <Stack.Screen name="Internet" component={Internet} />
-        <Stack.Screen name="TagihanBPJS" component={TagihanBPJS} />
-        <Stack.Screen name="TagihanAngsuran" component={TagihanAngsuran} />
-        <Stack.Screen name="TopupEmoney" component={TopupEmoney} />
-        <Stack.Screen name="PajakDaerah" component={PajakDaerah} />
-        <Stack.Screen name="NearMember" component={NearMember} />
-        <Stack.Screen name="InteractionMenu" component={InteractionMenu} />
-        <Stack.Screen name="SOS" component={SOS} />
-        <Stack.Screen name="ForumDiskusi" component={ForumDiskusi} />
-        <Stack.Screen name="PollingSurvey" component={PollingSurvey} />
-        <Stack.Screen name="Volunteer" component={Volunteer} />
-        <Stack.Screen name="CreateDiscussion" component={CreateDiscussion} />
-        <Stack.Screen name="DiscussionDetail" component={DiscussionDetail} />
-        <Stack.Screen name="NotificationSettings" component={NotificationSettings} />
-        <Stack.Screen name="Cart" component={Cart} />
-        <Stack.Screen name="Checkout" component={Checkout} />
-        <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
-        <Stack.Screen name="KYCVerification" component={KYCVerification} />
-        <Stack.Screen name="SOSLiveChat" component={SOSLiveChat} />
-        <Stack.Screen name="Chat" component={Chat} />
-        <Stack.Screen name="Bantuan" component={Bantuan} />
-        <Stack.Screen name="Aspirasiku" component={Aspirasiku} />
-        <Stack.Screen name="AspirasiHistory" component={AspirasiHistory} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      {!isAuthenticated ? (
+        <>
+          <Stack.Screen name="Prelogin" component={Prelogin} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="MainApp" component={BottomTabNavigator} />
+          <Stack.Screen name="NewsDetail" component={NewsDetail} />
+          <Stack.Screen name="NewsList" component={NewsList} />
+          <Stack.Screen name="ProductDetail" component={ProductDetail} />
+          <Stack.Screen name="Media" component={Media} />
+          <Stack.Screen name="AboutUs" component={AboutUs} />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Notification" component={Notification} />
+          <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
+          <Stack.Screen name="Event" component={Event} />
+          <Stack.Screen name="PPOB" component={PPOB} />
+          <Stack.Screen name="Pulsa" component={Pulsa} />
+          <Stack.Screen name="PaketData" component={PaketData} />
+          <Stack.Screen name="ListrikPrabayar" component={ListrikPrabayar} />
+          <Stack.Screen name="ListrikPascabayar" component={ListrikPascabayar} />
+          <Stack.Screen name="AirPDAM" component={AirPDAM} />
+          <Stack.Screen name="Internet" component={Internet} />
+          <Stack.Screen name="TagihanBPJS" component={TagihanBPJS} />
+          <Stack.Screen name="TagihanAngsuran" component={TagihanAngsuran} />
+          <Stack.Screen name="TopupEmoney" component={TopupEmoney} />
+          <Stack.Screen name="PajakDaerah" component={PajakDaerah} />
+          <Stack.Screen name="NearMember" component={NearMember} />
+          <Stack.Screen name="InteractionMenu" component={InteractionMenu} />
+          <Stack.Screen name="SOS" component={SOS} />
+          <Stack.Screen name="ForumDiskusi" component={ForumDiskusi} />
+          <Stack.Screen name="PollingSurvey" component={PollingSurvey} />
+          <Stack.Screen name="Volunteer" component={Volunteer} />
+          <Stack.Screen name="CreateDiscussion" component={CreateDiscussion} />
+          <Stack.Screen name="DiscussionDetail" component={DiscussionDetail} />
+          <Stack.Screen name="NotificationSettings" component={NotificationSettings} />
+          <Stack.Screen name="Cart" component={Cart} />
+          <Stack.Screen name="Checkout" component={Checkout} />
+          <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
+          <Stack.Screen name="KYCVerification" component={KYCVerification} />
+          <Stack.Screen name="SOSLiveChat" component={SOSLiveChat} />
+          <Stack.Screen name="Chat" component={Chat} />
+          <Stack.Screen name="Bantuan" component={Bantuan} />
+          <Stack.Screen name="Aspirasiku" component={Aspirasiku} />
+          <Stack.Screen name="AspirasiHistory" component={AspirasiHistory} />
+        </>
+      )}
+    </Stack.Navigator>
   );
 };
 

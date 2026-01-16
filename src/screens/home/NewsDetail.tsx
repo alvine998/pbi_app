@@ -18,7 +18,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
     id: params.newsId || 1,
     title: params.newsTitle || 'Update Fitur Terbaru PBI App',
     image: params.newsImage || 'https://images.unsplash.com/photo-1573163231162-73573d99e2b0?q=80&w=2069&auto=format&fit=crop',
-    content: params.newsContent || `
+    content: params.newsContent ? params.newsContent.replace(/<[^>]*>?/gm, '') : `
       Kami sangat excited untuk mengumumkan update terbaru dari PBI App yang akan meningkatkan pengalaman pengguna secara signifikan.
       
       Fitur-fitur baru yang telah kami tambahkan meliputi sistem notifikasi yang lebih cerdas, antarmuka pengguna yang diperbaharui, dan keamanan data yang ditingkatkan.

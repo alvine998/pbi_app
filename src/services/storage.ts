@@ -32,9 +32,12 @@ export interface AuthData {
  */
 export const saveAuthData = async (authData: AuthData): Promise<void> => {
   try {
+    const userData = JSON.stringify(authData.user || {});
+    const token = authData.token || '';
+
     await AsyncStorage.multiSet([
-      [STORAGE_KEYS.USER_DATA, JSON.stringify(authData.user)],
-      [STORAGE_KEYS.AUTH_TOKEN, authData.token],
+      [STORAGE_KEYS.USER_DATA, userData],
+      [STORAGE_KEYS.AUTH_TOKEN, token],
       [STORAGE_KEYS.IS_LOGGED_IN, 'true'],
     ]);
     console.log('Auth data saved successfully');

@@ -12,8 +12,7 @@ import normalize from 'react-native-normalize';
 import { COLOR } from '../../utils/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
-import { CONFIG } from '../../config';
-import axios from 'axios';
+import api from '../../services/api';
 
 interface RegisterProps {
   navigation: any;
@@ -23,7 +22,7 @@ export default function Register({ navigation }: RegisterProps) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isVisible2, setIsVisible2] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -36,7 +35,7 @@ export default function Register({ navigation }: RegisterProps) {
 
     return () => backHandler.remove();
   }, [navigation]);
-  
+
   const [payload, setPayload] = useState({
     name: '',
     email: '',
@@ -108,15 +107,10 @@ export default function Register({ navigation }: RegisterProps) {
     try {
       // Clean payload - remove confirmPassword as it's not needed by the API
       const { confirmPassword, ...registerPayload } = payload;
-      
-      const response = await axios.post(
-        `${CONFIG.API_URL}/auth/register`,
-        registerPayload,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+
+      const response = await api.post(
+        '/auth/register',
+        registerPayload
       );
       console.log('Registration successful:', response.data);
       Toast.show({
@@ -129,15 +123,15 @@ export default function Register({ navigation }: RegisterProps) {
       setIsLoading(false);
     } catch (error: any) {
       console.log('Registration error:', error);
-      
+
       // Extract error message from API response
       let errorMessage = 'Registrasi gagal, coba lagi';
-      
+
       if (error.response) {
         // Server responded with error status
         const status = error.response.status;
         const errorData = error.response.data;
-        
+
         if (errorData && errorData.message) {
           errorMessage = errorData.message;
         } else if (errorData && errorData.error) {
@@ -153,7 +147,7 @@ export default function Register({ navigation }: RegisterProps) {
         // Request was made but no response received
         errorMessage = 'Tidak dapat terhubung ke server';
       }
-      
+
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -165,21 +159,16 @@ export default function Register({ navigation }: RegisterProps) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLOR.SECONDARY} />
+    <View style={{ flex: 1, backgroundColor: COLOR.PRIMARY }}>
+      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
 
       {/* Header with gradient */}
       <View
         style={{
-          backgroundColor: COLOR.SECONDARY,
+          backgroundColor: COLOR.PRIMARY,
           paddingTop: normalize(50),
           paddingBottom: normalize(0),
           paddingHorizontal: normalize(20),
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-          elevation: 4,
         }}
       >
         <View
@@ -195,7 +184,7 @@ export default function Register({ navigation }: RegisterProps) {
               width: normalize(40),
               height: normalize(40),
               borderRadius: normalize(20),
-              backgroundColor: 'rgba(86, 21, 35, 0.1)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
               justifyContent: 'center',
               alignItems: 'center',
               marginRight: normalize(15),
@@ -205,7 +194,7 @@ export default function Register({ navigation }: RegisterProps) {
               solid
               name="chevron-left"
               size={normalize(18)}
-              color={COLOR.PRIMARY}
+              color={COLOR.WHITE}
             />
           </TouchableOpacity>
 
@@ -213,7 +202,7 @@ export default function Register({ navigation }: RegisterProps) {
             style={{
               fontSize: normalize(24),
               fontWeight: 'bold',
-              color: COLOR.PRIMARY,
+              color: COLOR.WHITE,
             }}
           >
             Daftar
@@ -560,7 +549,7 @@ export default function Register({ navigation }: RegisterProps) {
           <Text
             style={{
               fontSize: normalize(14),
-              color: '#666',
+              color: COLOR.SECONDARY,
             }}
           >
             Sudah punya akun?{' '}
@@ -570,7 +559,7 @@ export default function Register({ navigation }: RegisterProps) {
               style={{
                 fontSize: normalize(14),
                 fontWeight: '600',
-                color: COLOR.PRIMARY,
+                color: COLOR.WHITE,
               }}
             >
               Masuk Sekarang

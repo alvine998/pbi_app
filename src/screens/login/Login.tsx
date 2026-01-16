@@ -14,16 +14,41 @@ import normalize from 'react-native-normalize';
 import { COLOR } from '../../utils/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
-import { CONFIG } from '../../config';
-import axios from 'axios';
-import { saveAuthData } from '../../services/storage';
+import api from '../../services/api';
+import useAuth from '../../hooks/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
+
+// Simple JWT decoder for React Native
+const decodeJwt = (token: string) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    let output = '';
+    let str = base64.replace(/=+$/, '');
+    for (
+      let bc = 0, bs = 0, buffer, idx = 0;
+      (buffer = str.charAt(idx++));
+      ~buffer && ((bs = bc % 4 ? bs * 64 + buffer : buffer), bc++ % 4)
+        ? (output += String.fromCharCode(255 & (bs >> ((-2 * bc) & 6))))
+        : 0
+    ) {
+      buffer = chars.indexOf(buffer);
+    }
+    return JSON.parse(output);
+  } catch (e) {
+    console.error('JWT Decode Error:', e);
+    return null;
+  }
+};
 
 export default function Login({ navigation }: { navigation: any }) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const { isLoading: authLoading, login } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -51,62 +76,107 @@ export default function Login({ navigation }: { navigation: any }) {
 
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${CONFIG.API_URL}/auth/login`,
+      const response = await api.post(
+        '/auth/login',
         {
           email,
           password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
         }
       );
       console.log('Login successful:', response.data);
-      
-      // Extract and save auth data from response
-      if (response.data && response.data.data) {
+
+      console.log('Login successful, response data:', JSON.stringify(response.data, null, 2));
+
+      // Extract token with fallbacks
+      const responseData = response.data?.data || response.data;
+      const token = responseData?.token || responseData?.accessToken;
+      let user = responseData?.user;
+
+      console.log('Extracted Token:', token ? 'Found' : 'Not Found');
+      console.log('Extracted User initial:', user ? 'Found' : 'Not Found');
+
+      if (token) {
+        // If user is missing, try to fetch it using information from token
+        if (!user) {
+          console.log('User data missing from login response, attempting to fetch profile...');
+          const payload = decodeJwt(token);
+
+          if (payload && payload.id) {
+            try {
+              // Temporarily set token for the profile request
+              const profileRes = await api.get(`/users/${payload.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+
+              const profileData = profileRes.data?.data || profileRes.data;
+              if (profileData) {
+                user = profileData;
+                console.log('Successfully fetched user profile after login');
+              } else {
+                throw new Error('Profile response empty');
+              }
+            } catch (profileError) {
+              console.error('Error fetching user profile after login:', profileError);
+              // Construct a skeleton user if fetching fails
+              user = {
+                id: payload.id,
+                email: payload.email || email,
+                name: payload.name || email.split('@')[0],
+              };
+            }
+          } else {
+            // Skeleton if decode fails
+            user = { id: 0, email, name: email.split('@')[0] };
+          }
+        }
+
+        // Final safety check to ensure user is never undefined
+        if (!user) {
+          user = { id: 0, email, name: email.split('@')[0] };
+        }
+
         const authData = {
-          user: response.data.data.user,
-          token: response.data.data.token,
+          user,
+          token,
         };
-        
-        // Save to AsyncStorage
+
+        // Save to AuthContext (which handles AsyncStorage)
         try {
-          await saveAuthData(authData);
-          console.log('Auth data saved to AsyncStorage');
+          await login(authData);
+          console.log('Auth data updated in context');
         } catch (storageError) {
-          console.error('Error saving auth data:', storageError);
+          console.error('Error updating login status:', storageError);
           Toast.show({
             type: 'error',
             text1: 'Warning',
-            text2: 'Gagal menyimpan data login',
+            text2: 'Gagal memperbarui status login',
             position: 'top',
           });
         }
+      } else {
+        throw new Error('Login response missing token');
       }
-      
+
       Toast.show({
         type: 'success',
         text1: 'Login Berhasil',
         text2: 'Selamat datang kembali!',
       });
-      
-      // Navigate to MainApp after successful login
+
+      // No need for navigation.navigate('MainApp') here if AppNavigator 
+      // is conditionally rendering based on isAuthenticated
       setIsLoading(false);
-      navigation.navigate('MainApp');
     } catch (error: any) {
       console.log('Login error:', error);
-      
+
       // Extract error message from API response
       let errorMessage = 'Login gagal, coba lagi';
-      
+
       if (error.response) {
         // Server responded with error status
         const status = error.response.status;
         const errorData = error.response.data;
-        
+
         if (errorData && errorData.message) {
           errorMessage = errorData.message;
         } else if (errorData && errorData.error) {
@@ -124,7 +194,7 @@ export default function Login({ navigation }: { navigation: any }) {
         // Request was made but no response received
         errorMessage = 'Tidak dapat terhubung ke server';
       }
-      
+
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -136,21 +206,16 @@ export default function Login({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLOR.SECONDARY} />
+    <View style={{ flex: 1, backgroundColor: COLOR.PRIMARY }}>
+      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
 
       {/* Header with gradient */}
       <View
         style={{
-          backgroundColor: COLOR.SECONDARY,
+          backgroundColor: COLOR.PRIMARY,
           paddingTop: normalize(50),
           paddingBottom: normalize(0),
           paddingHorizontal: normalize(20),
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-          elevation: 4,
         }}
       >
         <View
@@ -166,7 +231,7 @@ export default function Login({ navigation }: { navigation: any }) {
               width: normalize(40),
               height: normalize(40),
               borderRadius: normalize(20),
-              backgroundColor: 'rgba(86, 21, 35, 0.1)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
               justifyContent: 'center',
               alignItems: 'center',
               marginRight: normalize(15),
@@ -176,7 +241,7 @@ export default function Login({ navigation }: { navigation: any }) {
               solid
               name="chevron-left"
               size={normalize(18)}
-              color={COLOR.PRIMARY}
+              color={COLOR.WHITE}
             />
           </TouchableOpacity>
 
@@ -184,7 +249,7 @@ export default function Login({ navigation }: { navigation: any }) {
             style={{
               fontSize: normalize(24),
               fontWeight: 'bold',
-              color: COLOR.PRIMARY,
+              color: COLOR.WHITE,
             }}
           >
             Masuk
@@ -397,7 +462,7 @@ export default function Login({ navigation }: { navigation: any }) {
           <Text
             style={{
               fontSize: normalize(14),
-              color: '#666',
+              color: COLOR.SECONDARY,
             }}
           >
             Belum punya akun?{' '}
@@ -407,7 +472,7 @@ export default function Login({ navigation }: { navigation: any }) {
               style={{
                 fontSize: normalize(14),
                 fontWeight: '600',
-                color: COLOR.PRIMARY,
+                color: COLOR.WHITE,
               }}
             >
               Daftar Sekarang

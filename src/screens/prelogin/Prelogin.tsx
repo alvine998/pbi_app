@@ -25,8 +25,8 @@ export default function Prelogin({ navigation }: PreloginProps) {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLOR.SECONDARY} />
+    <View style={{ flex: 1, backgroundColor: COLOR.PRIMARY }}>
+      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
 
       {/* Header with gradient background */}
       <View
@@ -44,7 +44,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
               width: normalize(120),
               height: normalize(120),
               borderRadius: normalize(60),
-              backgroundColor: COLOR.PRIMARY,
+              backgroundColor: COLOR.WHITE,
               justifyContent: 'center',
               alignItems: 'center',
               marginBottom: normalize(20),
@@ -56,7 +56,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
             }}
           >
             <Image
-              source={require('../../assets/images/logo2.png')}
+              source={require('../../assets/images/blue_ant.png')}
               style={{
                 width: normalize(150),
                 height: normalize(150),
@@ -69,7 +69,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
             style={{
               fontSize: normalize(28),
               fontWeight: 'bold',
-              color: COLOR.PRIMARY,
+              color: COLOR.WHITE,
               textAlign: 'center',
               marginBottom: normalize(8),
             }}
@@ -80,7 +80,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
           <Text
             style={{
               fontSize: normalize(16),
-              color: COLOR.DARK_GRAY,
+              color: COLOR.SECONDARY,
               textAlign: 'center',
               lineHeight: normalize(22),
             }}
@@ -140,7 +140,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
           <View
             style={{
               height: 1,
-              backgroundColor: '#E5E5E5',
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
               flex: 1,
             }}
           />
@@ -148,7 +148,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
             style={{
               marginHorizontal: normalize(16),
               fontSize: normalize(14),
-              color: '#666',
+              color: COLOR.SECONDARY,
               fontWeight: '500',
             }}
           >
@@ -157,7 +157,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
           <View
             style={{
               height: 1,
-              backgroundColor: '#E5E5E5',
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
               flex: 1,
             }}
           />
@@ -166,10 +166,10 @@ export default function Prelogin({ navigation }: PreloginProps) {
         {/* Register Button */}
         <TouchableOpacity
           style={{
-            backgroundColor: COLOR.PRIMARY,
+            backgroundColor: COLOR.SECONDARY,
             paddingVertical: normalize(18),
             borderRadius: normalize(12),
-            shadowColor: COLOR.PRIMARY,
+            shadowColor: COLOR.BLACK,
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 8,
@@ -179,7 +179,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
         >
           <Text
             style={{
-              color: COLOR.WHITE,
+              color: COLOR.PRIMARY,
               fontSize: normalize(16),
               fontWeight: '600',
               textAlign: 'center',
@@ -194,17 +194,17 @@ export default function Prelogin({ navigation }: PreloginProps) {
           <Text
             style={{
               fontSize: normalize(12),
-              color: '#666',
+              color: COLOR.WHITE,
               textAlign: 'center',
               lineHeight: normalize(18),
             }}
           >
             Dengan melanjutkan, Anda menyetujui{'\n'}
-            <Text style={{ color: COLOR.PRIMARY, fontWeight: '500' }}>
+            <Text style={{ color: COLOR.SECONDARY, fontWeight: '500' }}>
               Syarat & Ketentuan
             </Text>
             {' '}dan{' '}
-            <Text style={{ color: COLOR.PRIMARY, fontWeight: '500' }}>
+            <Text style={{ color: COLOR.SECONDARY, fontWeight: '500' }}>
               Kebijakan Privasi
             </Text>
           </Text>
@@ -219,7 +219,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
             <Text
               style={{
                 fontSize: normalize(14),
-                color: COLOR.GRAY,
+                color: COLOR.SECONDARY,
                 textAlign: 'center',
                 textDecorationLine: 'underline',
               }}

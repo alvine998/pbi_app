@@ -14,37 +14,53 @@ const api = axios.create({
 
 // Request interceptor - automatically add auth token to requests
 api.interceptors.request.use(
-  async (config) => {
+  async config => {
     // Get auth token from AsyncStorage
     const token = await getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log(
+        `API Request: ${config.method?.toUpperCase()} ${
+          config.url
+        } [Authorized]`,
+      );
+    } else {
+      console.log(
+        `API Request: ${config.method?.toUpperCase()} ${
+          config.url
+        } [Unauthorized]`,
+      );
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor for error handling
 api.interceptors.response.use(
-  (response) => {
+  response => {
     return response;
   },
-  async (error) => {
+  async error => {
     // Handle common errors
     if (error.response) {
       // Server responded with error status
       const { status, data } = error.response;
-      
+
       // Handle specific status codes
       if (status === 401) {
         // Handle unauthorized - token expired or invalid
-        // Clear auth data and redirect to login
-        const { clearAuthData } = await import('./storage');
-        await clearAuthData();
-        console.log('Session expired, auth data cleared');
+        // Only clear and logout if we actually sent a token
+        const sentToken = error.config?.headers?.Authorization;
+        if (sentToken && sentToken.startsWith('Bearer ')) {
+          console.log('Session expired, clearing auth data');
+          const { clearAuthData } = await import('./storage');
+          await clearAuthData();
+          // Ideally trigger a global logout via context, but clearing storage
+          // will cause useAuth to update on next check/mount
+        }
       } else if (status === 403) {
         // Handle forbidden
         console.error('Access forbidden');
@@ -59,9 +75,9 @@ api.interceptors.response.use(
       // Error in request setup
       console.error('Error setting up request:', error.message);
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
