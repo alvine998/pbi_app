@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { isLoggedIn, getUserData, getAuthToken, saveAuthData, clearAuthData, AuthData, UserData } from '../services/storage';
 import { isKycVerified } from '../utils/kyc';
 
@@ -8,8 +8,10 @@ interface AuthContextType {
     token: string | null;
     isLoading: boolean;
     hasCompletedKyc: boolean;
+    isGuest: boolean;
     login: (authData: AuthData) => Promise<void>;
     logout: () => Promise<void>;
+    continueAsGuest: () => void;
     refreshAuth: (silent?: boolean) => Promise<void>;
 }
 
@@ -21,12 +23,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hasCompletedKyc, setHasCompletedKyc] = useState<boolean>(false);
+    const [isGuest, setIsGuest] = useState<boolean>(false);
 
-    useEffect(() => {
-        checkAuthStatus();
-    }, []);
-
-    const checkAuthStatus = async (silent = false) => {
+    const checkAuthStatus = useCallback(async (silent = false) => {
         try {
             if (!silent) setIsLoading(true);
             const loggedIn = await isLoggedIn();
@@ -38,6 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setToken(authToken);
                 setUser(userData);
                 setHasCompletedKyc(isKycVerified(userData));
+                setIsGuest(false);
             } else {
                 // If state is inconsistent, clear everything
                 if (loggedIn || authToken || userData) {
@@ -47,52 +47,68 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setToken(null);
                 setUser(null);
                 setHasCompletedKyc(false);
+                // We don't clear isGuest here because it's a transient session state
             }
         } catch (error) {
             console.error('Error checking auth status:', error);
         } finally {
             if (!silent) setIsLoading(false);
         }
-    };
+    }, []);
 
-    const login = async (authData: AuthData) => {
+    useEffect(() => {
+        checkAuthStatus();
+    }, [checkAuthStatus]);
+
+    const login = useCallback(async (authData: AuthData) => {
         try {
             await saveAuthData(authData);
             setIsAuthenticated(true);
             setToken(authData.token);
             setUser(authData.user);
             setHasCompletedKyc(isKycVerified(authData.user));
+            setIsGuest(false);
         } catch (error) {
             console.error('Error during login context update:', error);
             throw error;
         }
-    };
+    }, []);
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         try {
             await clearAuthData();
             setIsAuthenticated(false);
             setToken(null);
             setUser(null);
             setHasCompletedKyc(false);
+            setIsGuest(false);
         } catch (error) {
             console.error('Error during logout context update:', error);
             throw error;
         }
-    };
+    }, []);
+
+    const continueAsGuest = useCallback(() => {
+        setIsGuest(true);
+        setIsAuthenticated(false);
+    }, []);
+
+    const contextValue = useMemo(() => ({
+        isAuthenticated,
+        user,
+        token,
+        isLoading,
+        hasCompletedKyc,
+        isGuest,
+        login,
+        logout,
+        continueAsGuest,
+        refreshAuth: checkAuthStatus,
+    }), [isAuthenticated, user, token, isLoading, hasCompletedKyc, isGuest, login, logout, continueAsGuest, checkAuthStatus]);
 
     return (
         <AuthContext.Provider
-            value={{
-                isAuthenticated,
-                user,
-                token,
-                isLoading,
-                hasCompletedKyc,
-                login,
-                logout,
-                refreshAuth: checkAuthStatus,
-            }}
+            value={contextValue}
         >
             {children}
         </AuthContext.Provider>

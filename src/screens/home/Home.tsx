@@ -1011,13 +1011,6 @@ export default function Home({ navigation }: HomeProps) {
                   borderRadius: normalize(16),
                   marginBottom: normalize(16),
                   overflow: 'hidden',
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 4,
-                  },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 12,
                   elevation: 8,
                 }}
                 onPress={() => navigation.navigate('NewsDetail', {
@@ -1052,7 +1045,6 @@ export default function Home({ navigation }: HomeProps) {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        opacity: 0.6,
                       }}
                     />
                   ) : (

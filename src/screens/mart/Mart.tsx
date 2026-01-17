@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,15 @@ import {
   TextInput,
   FlatList,
   Image,
-  Modal
+  Modal,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { COLOR } from '../../utils/Color';
 import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import api from '../../services/api';
+import Toast from 'react-native-toast-message';
 
 interface MartProps {
   navigation: any;
@@ -22,10 +26,12 @@ interface Product {
   name: string;
   price: number;
   originalPrice?: number;
-  image: string;
+  images: string[];
   sold: number;
   category: string;
   rating: number;
+  description?: string;
+  stock?: number;
 }
 
 export default function Mart({ navigation }: MartProps) {
@@ -34,68 +40,56 @@ export default function Mart({ navigation }: MartProps) {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [sortBy, setSortBy] = useState('Terbaru');
 
-  // Sample product data
-  const products: Product[] = [
-    {
-      id: 1,
-      name: 'Smartphone Samsung Galaxy A54',
-      price: 4500000,
-      originalPrice: 5000000,
-      image: 'https://via.placeholder.com/200x200/4A90E2/FFFFFF?text=Samsung',
-      sold: 125,
-      category: 'Elektronik',
-      rating: 4.5
-    },
-    {
-      id: 2,
-      name: 'Laptop ASUS VivoBook 14',
-      price: 8500000,
-      image: 'https://via.placeholder.com/200x200/8B5CF6/FFFFFF?text=ASUS',
-      sold: 89,
-      category: 'Elektronik',
-      rating: 4.7
-    },
-    {
-      id: 3,
-      name: 'Kemeja Formal Pria',
-      price: 299000,
-      originalPrice: 399000,
-      image: 'https://via.placeholder.com/200x200/10B981/FFFFFF?text=Shirt',
-      sold: 234,
-      category: 'Fashion',
-      rating: 4.3
-    },
-    {
-      id: 4,
-      name: 'Sepatu Sneakers Nike Air Max',
-      price: 1500000,
-      originalPrice: 1800000,
-      image: 'https://via.placeholder.com/200x200/EF4444/FFFFFF?text=Nike',
-      sold: 67,
-      category: 'Fashion',
-      rating: 4.6
-    },
-    {
-      id: 5,
-      name: 'Kamera Mirrorless Canon EOS M50',
-      price: 7500000,
-      image: 'https://via.placeholder.com/200x200/F59E0B/FFFFFF?text=Canon',
-      sold: 45,
-      category: 'Elektronik',
-      rating: 4.8
-    },
-    {
-      id: 6,
-      name: 'Tas Ransel Backpack',
-      price: 450000,
-      image: 'https://via.placeholder.com/200x200/6366F1/FFFFFF?text=Bag',
-      sold: 156,
-      category: 'Fashion',
-      rating: 4.2
-    }
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const categories = ['Semua', 'Elektronik', 'Fashion', 'Makanan', 'Kesehatan'];
+  const fetchProducts = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setIsLoading(true);
+
+    try {
+      const response = await api.get('/products');
+
+      // Handle different response formats (array vs object with items)
+      const productData = Array.isArray(response.data)
+        ? response.data
+        : response.data.items || response.data.data || [];
+
+      // Map API fields if necessary (ensure field names match what UI expects)
+      const mappedProducts = productData.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price) || 0,
+        originalPrice: p.originalPrice ? Number(p.originalPrice) : undefined,
+        images: Array.isArray(p.images) && p.images.length > 0 ? p.images : ['https://via.placeholder.com/200x200/F3F4F6/999999?text=No+Image'],
+        sold: Number(p.sold) || 0,
+        category: p.category?.name || p.category || 'Lainnya',
+        rating: Number(p.rating) || 4.5,
+        description: p.description || '',
+        stock: Number(p.stock) || 0
+      }));
+
+      setProducts(mappedProducts);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Gagal Memuat Produk',
+        text2: 'Silakan coba lagi nanti',
+        position: 'top',
+      });
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const categories = ['Semua', ...new Set(products.map(p => p.category))];
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -117,6 +111,10 @@ export default function Mart({ navigation }: MartProps) {
         return 0;
     }
   });
+
+  const onRefresh = () => {
+    fetchProducts(true);
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -157,7 +155,7 @@ export default function Mart({ navigation }: MartProps) {
         }}
       >
         <Image
-          source={{ uri: item.image }}
+          source={{ uri: item.images[0] }}
           style={{
             width: '80%',
             height: '80%',
@@ -390,51 +388,66 @@ export default function Mart({ navigation }: MartProps) {
       </View>
 
       {/* Products Grid */}
-      <FlatList
-        data={sortedProducts}
-        renderItem={renderProduct}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        contentContainerStyle={{
-          paddingHorizontal: normalize(20),
-          paddingBottom: normalize(100),
-        }}
-        columnWrapperStyle={{
-          justifyContent: 'space-between',
-        }}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: normalize(50),
-            }}
-          >
-            <Icon name="search" size={normalize(50)} color={COLOR.GRAY} solid />
-            <Text
+      {isLoading && !refreshing ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+          <Text style={{ marginTop: normalize(10), color: COLOR.GRAY }}>Memuat produk...</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={sortedProducts}
+          renderItem={renderProduct}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          contentContainerStyle={{
+            paddingHorizontal: normalize(20),
+            paddingBottom: normalize(100),
+          }}
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+          }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[COLOR.PRIMARY]}
+              tintColor={COLOR.PRIMARY}
+            />
+          }
+          ListEmptyComponent={
+            <View
               style={{
-                fontSize: normalize(16),
-                color: COLOR.GRAY,
-                marginTop: normalize(15),
-                textAlign: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: normalize(50),
               }}
             >
-              Produk tidak ditemukan
-            </Text>
-            <Text
-              style={{
-                fontSize: normalize(12),
-                color: COLOR.GRAY,
-                textAlign: 'center',
-                marginTop: normalize(5),
-              }}
-            >
-              Coba ubah kata kunci atau filter pencarian
-            </Text>
-          </View>
-        }
-      />
+              <Icon name="search" size={normalize(50)} color={COLOR.GRAY} solid />
+              <Text
+                style={{
+                  fontSize: normalize(16),
+                  color: COLOR.GRAY,
+                  marginTop: normalize(15),
+                  textAlign: 'center',
+                }}
+              >
+                Produk tidak ditemukan
+              </Text>
+              <Text
+                style={{
+                  fontSize: normalize(12),
+                  color: COLOR.GRAY,
+                  textAlign: 'center',
+                  marginTop: normalize(5),
+                }}
+              >
+                Coba ubah kata kunci atau filter pencarian
+              </Text>
+            </View>
+          }
+        />
+      )}
 
       {/* Filter Modal */}
       <Modal

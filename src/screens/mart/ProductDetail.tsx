@@ -22,7 +22,7 @@ interface Product {
   name: string;
   price: number;
   originalPrice?: number;
-  image: string;
+  images: string[];
   sold: number;
   category: string;
   rating: number;
@@ -42,11 +42,11 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
     name: 'Smartphone Samsung Galaxy A54',
     price: 4500000,
     originalPrice: 5000000,
-    image: 'https://via.placeholder.com/400x400/4A90E2/FFFFFF?text=Samsung',
+    images: ['https://via.placeholder.com/400x400/4A90E2/FFFFFF?text=Samsung'],
     sold: 125,
     category: 'Elektronik',
     rating: 4.5,
-    description: 'Smartphone terbaru dari Samsung dengan kamera berkualitas tinggi, prosesor yang powerful, dan baterai tahan lama. Dilengkapi dengan layar AMOLED 6.4 inch dan fitur fast charging.',
+    description: 'Smartphone terbaru dari Samsung dengan kamera berkualitas tinggi, prosesor yang powerful, and baterai tahan lama. Dilengkapi dengan layar AMOLED 6.4 inch and fitur fast charging.',
     stock: 50,
   };
 
@@ -81,7 +81,7 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
         id: currentProduct.id,
         name: currentProduct.name,
         price: currentProduct.price,
-        image: currentProduct.image,
+        image: currentProduct.images[0] || 'https://via.placeholder.com/200x200/F3F4F6/999999?text=No+Image',
         quantity: quantity,
         stock: currentProduct.stock || 99,
       },
@@ -212,7 +212,7 @@ export default function ProductDetail({ navigation, route }: ProductDetailProps)
         }}
       >
         <Image
-          source={{ uri: currentProduct.image }}
+          source={{ uri: currentProduct.images[0] || 'https://via.placeholder.com/200x200/F3F4F6/999999?text=No+Image' }}
           style={{
             width: '100%',
             height: normalize(250),

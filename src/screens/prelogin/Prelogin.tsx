@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity, StatusBar, Dimensions, BackHandler
 import React, { useEffect } from 'react';
 import { COLOR } from '../../utils/Color';
 import normalize from 'react-native-normalize';
+import { useAuth } from '../../hooks/useAuth';
 
 const { width, height } = Dimensions.get('window');
 
@@ -10,6 +11,8 @@ interface PreloginProps {
 }
 
 export default function Prelogin({ navigation }: PreloginProps) {
+  const { continueAsGuest } = useAuth();
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -213,7 +216,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
         {/* Continue without login */}
         <View style={{ marginTop: normalize(30), alignItems: 'center' }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('MainApp')}
+            onPress={() => continueAsGuest()}
             style={{ paddingVertical: normalize(10) }}
           >
             <Text

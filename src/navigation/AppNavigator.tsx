@@ -102,7 +102,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isGuest, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -118,7 +118,7 @@ const AppNavigator = () => {
         headerShown: false,
       }}
     >
-      {!isAuthenticated ? (
+      {!isAuthenticated && !isGuest ? (
         <>
           <Stack.Screen name="Prelogin" component={Prelogin} />
           <Stack.Screen name="Login" component={Login} />

@@ -11,7 +11,7 @@ interface AkunProps {
 }
 
 export default function Akun({ navigation }: AkunProps) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const displayName = isAuthenticated && user?.name ? user.name : 'Tamu';
   const displayEmail = isAuthenticated && user?.email ? user.email : '-';
@@ -401,7 +401,7 @@ export default function Akun({ navigation }: AkunProps) {
         {/* Logout Button */}
         <TouchableOpacity
           style={{
-            backgroundColor: '#FF6B6B',
+            backgroundColor: COLOR.PRIMARY,
             paddingVertical: normalize(15),
             paddingHorizontal: normalize(20),
             borderRadius: normalize(25),
@@ -409,13 +409,7 @@ export default function Akun({ navigation }: AkunProps) {
             marginTop: normalize(20),
           }}
           onPress={async () => {
-            try {
-              await clearAuthData();
-            } catch { }
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Prelogin' }],
-            });
+            await logout();
           }}
         >
           <Text
@@ -425,7 +419,7 @@ export default function Akun({ navigation }: AkunProps) {
               color: COLOR.WHITE,
             }}
           >
-            Keluar
+            {isAuthenticated ? 'Keluar' : 'Login'}
           </Text>
         </TouchableOpacity>
       </View>

@@ -11,6 +11,7 @@ export const useAuth = () => {
   return useMemo(
     () => ({
       isAuthenticated: authContext.isAuthenticated,
+      isGuest: authContext.isGuest,
       user: authContext.user,
       token: authContext.token,
       isLoading: authContext.isLoading,
@@ -18,9 +19,11 @@ export const useAuth = () => {
       refreshAuth: authContext.refreshAuth,
       login: authContext.login,
       logout: authContext.logout,
+      continueAsGuest: authContext.continueAsGuest,
     }),
     [
       authContext.isAuthenticated,
+      authContext.isGuest,
       authContext.user,
       authContext.token,
       authContext.isLoading,
@@ -28,6 +31,7 @@ export const useAuth = () => {
       authContext.refreshAuth,
       authContext.login,
       authContext.logout,
+      authContext.continueAsGuest,
     ],
   );
 };
