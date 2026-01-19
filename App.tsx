@@ -6,6 +6,8 @@ import Toast from 'react-native-toast-message';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider } from './src/context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+import { COLOR } from './src/utils/Color';
 
 // CodePush configuration temporarily disabled for debugging
 // const getCodePushConfig = () => {
@@ -87,6 +89,7 @@ import { NavigationContainer } from '@react-navigation/native';
 function App() {
   return (
     <SafeAreaProvider>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       <AuthProvider>
         <NavigationContainer>
           <AppNavigator />

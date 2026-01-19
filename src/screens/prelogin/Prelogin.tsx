@@ -29,7 +29,7 @@ export default function Prelogin({ navigation }: PreloginProps) {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.PRIMARY }}>
-      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
+      <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
       {/* Header with gradient background */}
       <View

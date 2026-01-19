@@ -55,7 +55,7 @@ export default function NewsDetail({ navigation, route }: NewsDetailProps) {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.WHITE }}>
-      <StatusBar backgroundColor={COLOR.PRIMARY} barStyle="light-content" />
+      <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
       <ScrollView
         style={{ flex: 1 }}

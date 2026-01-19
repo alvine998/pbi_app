@@ -207,7 +207,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLOR.PRIMARY }}>
-      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
       {/* Header with gradient */}
       <View

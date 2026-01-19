@@ -370,11 +370,9 @@ export default function Home({ navigation }: HomeProps) {
               alignItems: 'center',
             }}
           >
-            <Icon
-              name="user"
-              size={normalize(20)}
-              color={COLOR.SECONDARY}
-              solid
+            <Image
+              source={require('../../assets/images/logo2.png')}
+              style={{ width: normalize(70), height: normalize(70) }}
             />
           </TouchableOpacity>
         </View>
@@ -559,18 +557,11 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#FF6B35',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#FF6B35',
-                    shadowOffset: {
-                      width: 0,
-                      height: 4,
-                    },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 8,
                     elevation: 8,
                   }}
                 >
@@ -611,12 +602,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#4ECDC4',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#4ECDC4',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -666,12 +657,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#45B7D1',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#45B7D1',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -720,12 +711,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#FFD93D',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#FFD93D',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -768,12 +759,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#FECA57',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#FECA57',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -815,12 +806,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#A8E6CF',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#A8E6CF',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -868,12 +859,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#DDA0DD',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#DDA0DD',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,
@@ -922,12 +913,12 @@ export default function Home({ navigation }: HomeProps) {
                   style={{
                     width: normalize(60),
                     height: normalize(60),
-                    backgroundColor: '#FF6B6B',
+                    backgroundColor: COLOR.PRIMARY,
                     borderRadius: normalize(30),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: normalize(8),
-                    shadowColor: '#FF6B6B',
+                    shadowColor: COLOR.PRIMARY,
                     shadowOffset: {
                       width: 0,
                       height: 4,

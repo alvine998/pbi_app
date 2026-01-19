@@ -51,7 +51,7 @@ export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
         backgroundColor: COLOR.PRIMARY,
       }}
     >
-      <StatusBar barStyle="light-content" backgroundColor={COLOR.PRIMARY} />
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       {/* Header */}
       <View
         style={{
