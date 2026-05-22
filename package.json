@@ -1,6 +1,6 @@
 {
   "name": "pbi",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
+    "build:aab": "cd android && ./gradlew bundleRelease",
     "codepush:android:staging": "appcenter codepush release-react -a your-app-center-account/Baramuda-08-Android -d Staging",
     "codepush:android:production": "appcenter codepush release-react -a your-app-center-account/Baramuda-08-Android -d Production",
     "codepush:ios:staging": "appcenter codepush release-react -a your-app-center-account/Baramuda-08-iOS -d Staging",
