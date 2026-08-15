@@ -20,6 +20,7 @@ import { requireAuth, requireKyc } from '../../utils/authGuard';
 import { useAuth } from '../../hooks/useAuth';
 import { useIsFocused } from '@react-navigation/native';
 import api from '../../services/api';
+import { normalizeNewsImage } from '../../utils/imageUrl';
 
 interface HomeProps {
   navigation: any;
@@ -139,8 +140,9 @@ export default function Home({ navigation }: HomeProps) {
           status: 'Published'
         }
       });
+
       if (response.data && response.data.items) {
-        setNews(response.data.items);
+        setNews(response.data.items.map(normalizeNewsImage));
       }
     } catch (error) {
       console.error('Error fetching latest news:', error);
@@ -148,6 +150,7 @@ export default function Home({ navigation }: HomeProps) {
       setIsNewsLoading(false);
     }
   };
+  console.log(news, "denews");
 
   // Auto-advance carousel
   React.useEffect(() => {

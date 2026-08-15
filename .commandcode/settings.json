@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(npm:*)",
+      "Shell(keytool:*)",
+      "Shell(grep:*)",
+      "Shell(node -e \" const glyphs = require('/Users/alvineyoga/Documents/new/non jobs/baramuda_app/node_modules/react-native-vector-icons/glyphmaps/FontAwesome5Free.json'); console.log('google in solid:', 'google' in glyphs.solid ? glyphs.solid.google : undefined); console.log('google in regular:', 'google' in glyphs.regular ? glyphs.regular.google : undefined); console.log('google in brands:', 'google' in glyphs.brands ? glyphs.brands.google : undefined); \")",
+      "Shell(node -e \" const glyphs = require('/Users/alvineyoga/Documents/new/non jobs/baramuda_app/node_modules/react-native-vector-icons/glyphmaps/FontAwesome5Free.json'); const keys = Object.keys(glyphs); console.log('has google key:', glyphs.google); const meta = require('/Users/alvineyoga/Documents/new/non jobs/baramuda_app/node_modules/react-native-vector-icons/glyphmaps/FontAwesome5Free_meta.json'); console.log('meta keys sample:', Object.keys(meta).slice(0,5)); console.log('google meta:', meta.google); \")",
+      "Shell(node -e \" const meta = require('/Users/alvineyoga/Documents/new/non jobs/baramuda_app/node_modules/react-native-vector-icons/glyphmaps/FontAwesome5Free_meta.json'); const brandKeys = Object.keys(meta.brands); console.log('brands count:', brandKeys.length); console.log('google in brands:', 'google' in meta.brands); const solidKeys = Object.keys(meta.solid); console.log('google in solid:', 'google' in meta.solid); \")",
+      "Shell(curl -sL -o /Users/alvineyoga/Documents/new/non jobs/baramuda_app/src/assets/images/google_logo.png https://www.gstatic.com/marketing-campaign/1000630/v3/google-g-logo.png)",
+      "Shell(node -e \" const meta = require('/Users/alvineyoga/Documents/new/non jobs/baramuda_app/node_modules/react-native-vector-icons/glyphmaps/FontAwesome5Free_meta.json'); // Check what brand-ish 'G' letter icons exist console.log('globe:', 'globe' in meta.solid); const brands = Object.keys(meta.brands).filter(k => k.includes('google')); console.log('google-like brands:', brands); \")",
+      "Shell(rm:*)",
+      "Shell(npx tsc --noEmit 2 >& 1)",
+      "Shell(./node_modules/.bin/tsc:*)",
+      "Shell(./gradlew:*)",
+      "Shell(cd \"/Users/alvineyoga/Documents/new/non jobs/baramuda_app\" && ls node_modules/hermes-engine/ 2>/dev/null | head; echo \"---\"; ls node_modules/react-native/sdks/ 2>/dev/null; echo \"---\"; grep -A2 '\"hermes-engine\"' package.json)",
+      "Shell(node -e console.log(require('./node_modules/hermes-engine/package.json').version))",
+      "Shell(cd \"/Users/alvineyoga/Documents/new/non jobs/baramuda_app\" && find node_modules/hermes-engine -name \"version.properties\" 2>/dev/null; echo \"---\"; find node_modules/react-native/sdks/hermes-engine -type f | head -20)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

@@ -138,11 +138,11 @@ export default function Bantuan({ navigation }: { navigation: any }) {
 
                     {/* Footer Info */}
                     <View style={styles.footerInfo}>
-                        <Text style={styles.versionText}>Baramuda App v1.0.4</Text>
-                        <TouchableOpacity onPress={() => Linking.openURL('https://baramuda.id/terms')}>
+                        <Text style={styles.versionText}>PBI App v1.0.6</Text>
+                        <TouchableOpacity onPress={() => Linking.openURL('https://pbi.web.id/child-safety-standards')}>
                             <Text style={styles.linkText}>Syarat & Ketentuan</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => Linking.openURL('https://baramuda.id/privacy')}>
+                        <TouchableOpacity onPress={() => Linking.openURL('https://pbi.web.id/child-safety-standards')}>
                             <Text style={styles.linkText}>Kebijakan Privasi</Text>
                         </TouchableOpacity>
                     </View>

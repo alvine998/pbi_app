@@ -15,6 +15,7 @@ import normalize from 'react-native-normalize';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../../services/api';
 import { ActivityIndicator } from 'react-native';
+import { normalizeNewsImage } from '../../utils/imageUrl';
 
 const NEWS_CATEGORIES = ['Semua', 'Update', 'Keamanan', 'Kegiatan', 'Tips'];
 
@@ -87,7 +88,7 @@ export default function NewsList({ navigation }: { navigation: any }) {
             });
 
             if (response.data && response.data.items) {
-                setNews(response.data.items);
+                setNews(response.data.items.map(normalizeNewsImage));
             }
         } catch (error) {
             console.error('Error fetching news:', error);

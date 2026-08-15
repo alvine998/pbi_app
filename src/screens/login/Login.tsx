@@ -17,6 +17,10 @@ import Toast from 'react-native-toast-message';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 const { width, height } = Dimensions.get('window');
 
@@ -61,8 +65,115 @@ export default function Login({ navigation }: { navigation: any }) {
       }
     );
 
+    // Configure Google Sign-In with the web client ID from google-services.json
+    GoogleSignin.configure({
+      webClientId:
+        '309321457545-6633urc5h02pne6j1ik3egfv5a2h7tbj.apps.googleusercontent.com',
+    });
+
     return () => backHandler.remove();
   }, [navigation]);
+
+  const handleGoogleLogin = async () => {
+    console.log('[GoogleLogin] Starting Google Sign-In...');
+    setIsLoading(true);
+    try {
+      // Check if Google Play Services is available
+      const hasPlayServices = await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+      console.log('[GoogleLogin] hasPlayServices:', hasPlayServices);
+
+      const userInfo = await GoogleSignin.signIn();
+      console.log('[GoogleLogin] signIn success, userInfo keys:', Object.keys(userInfo));
+      console.log('[GoogleLogin] idToken:', userInfo.idToken ? 'PRESENT' : 'MISSING');
+      console.log('[GoogleLogin] user:', JSON.stringify(userInfo.user, null, 2));
+      console.log(
+        '[GoogleLogin] serverAuthCode:',
+        userInfo.serverAuthCode ? 'PRESENT' : 'MISSING'
+      );
+
+      const idToken = userInfo.idToken;
+      if (!idToken) {
+        throw new Error('No idToken returned from Google Sign-In');
+      }
+
+      // Send the ID token to the backend for verification + session creation
+      console.log('[GoogleLogin] Sending idToken to backend /auth/google...');
+      const response = await api.post('/auth/google', {
+        idToken,
+      });
+      console.log('[GoogleLogin] Backend response status:', response.status);
+      console.log(
+        '[GoogleLogin] Backend response data:',
+        JSON.stringify(response.data, null, 2)
+      );
+
+      // Same token/user extraction pattern as email login
+      const responseData = response.data?.data || response.data;
+      const token = responseData?.token || responseData?.accessToken;
+      let user = responseData?.user;
+
+      console.log('[GoogleLogin] Extracted Token:', token ? 'Found' : 'Not Found');
+      console.log('[GoogleLogin] Extracted User:', user ? 'Found' : 'Not Found');
+
+      if (token) {
+        if (!user) {
+          // Fallback user from Google profile
+          user = {
+            id: userInfo.user.id,
+            email: userInfo.user.email,
+            name: userInfo.user.name,
+          };
+        }
+        await login({ user, token });
+        console.log('[GoogleLogin] Auth data saved, login complete');
+        Toast.show({
+          type: 'success',
+          text1: 'Login Berhasil',
+          text2: 'Selamat datang kembali!',
+        });
+      } else {
+        throw new Error('Google login response missing token');
+      }
+    } catch (error: any) {
+      console.log('[GoogleLogin] ERROR:', JSON.stringify(error, null, 2));
+      console.log('[GoogleLogin] Error message:', error?.message);
+      console.log('[GoogleLogin] Error code:', error?.code);
+
+      let errorMessage = 'Login Google gagal, coba lagi';
+
+      if (error?.code === statusCodes.SIGN_IN_CANCELLED) {
+        errorMessage = 'Login Google dibatalkan';
+        console.log('[GoogleLogin] User cancelled sign-in');
+      } else if (error?.code === statusCodes.IN_PROGRESS) {
+        errorMessage = 'Login sedang berlangsung';
+        console.log('[GoogleLogin] Sign-in already in progress');
+      } else if (error?.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        errorMessage = 'Google Play Services tidak tersedia';
+        console.log('[GoogleLogin] Play services not available');
+      } else if (error?.response) {
+        // Backend rejected the token
+        console.log(
+          '[GoogleLogin] Backend error status:',
+          error.response.status,
+          'data:',
+          JSON.stringify(error.response.data)
+        );
+        const errData = error.response.data;
+        errorMessage = errData?.message || 'Token Google ditolak server';
+      }
+
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: errorMessage,
+        position: 'top',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -446,6 +557,95 @@ export default function Login({ navigation }: { navigation: any }) {
                 {isLoading ? 'Memproses...' : 'Masuk'}
               </Text>
             </View>
+          </TouchableOpacity>
+
+          {/* Divider */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: normalize(20),
+            }}
+          >
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#e9ecef',
+                flex: 1,
+              }}
+            />
+            <Text
+              style={{
+                marginHorizontal: normalize(16),
+                fontSize: normalize(14),
+                color: '#999',
+                fontWeight: '500',
+              }}
+            >
+              atau
+            </Text>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#e9ecef',
+                flex: 1,
+              }}
+            />
+          </View>
+
+          {/* Google Login Button */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#fff',
+              paddingVertical: normalize(16),
+              borderRadius: normalize(12),
+              borderWidth: 1,
+              borderColor: '#e9ecef',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.08,
+              shadowRadius: 6,
+              elevation: 3,
+              opacity: isLoading ? 0.7 : 1,
+            }}
+            onPress={handleGoogleLogin}
+            disabled={isLoading}
+          >
+            <View
+              style={{
+                width: normalize(20),
+                height: normalize(20),
+                borderRadius: normalize(10),
+                backgroundColor: '#4285F4',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: normalize(10),
+              }}
+            >
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: normalize(13),
+                  fontWeight: '700',
+                }}
+              >
+                G
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: '#333',
+                fontSize: normalize(16),
+                fontWeight: '600',
+                textAlign: 'center',
+              }}
+            >
+              Masuk dengan Google
+            </Text>
           </TouchableOpacity>
         </View>
 
