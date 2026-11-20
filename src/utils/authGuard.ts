@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { isLoggedIn, getUserData } from '../services/storage';
-import { isKycVerified } from './kyc';
+import { getKycStatus } from './kyc';
 
 /**
  * Check if user is authenticated and prompt login if needed
@@ -83,9 +83,39 @@ export const requireKyc = async (
   }
 
   const userData = await getUserData();
-  const kycCompleted = isKycVerified(userData);
+  const kycStatus = getKycStatus(userData);
 
-  if (!kycCompleted) {
+  if (kycStatus === 'waiting') {
+    Alert.alert(
+      'Menunggu Persetujuan Admin',
+      'Data KYC Anda sudah dikirim dan sedang menunggu persetujuan admin. Mohon tunggu hingga proses verifikasi selesai.',
+      [{ text: 'OK' }]
+    );
+    return false;
+  }
+
+  if (kycStatus === 'rejected') {
+    const reason = userData?.kycRejectionReason;
+    Alert.alert(
+      'Verifikasi KYC Ditolak',
+      reason
+        ? `Pengajuan KYC Anda ditolak: ${reason}. Silakan ajukan ulang.`
+        : 'Pengajuan KYC Anda ditolak oleh admin. Silakan ajukan ulang.',
+      [
+        {
+          text: 'Nanti',
+          style: 'cancel',
+        },
+        {
+          text: 'Ajukan Ulang',
+          onPress: () => navigation.navigate('LengkapiKYC'),
+        },
+      ]
+    );
+    return false;
+  }
+
+  if (kycStatus !== 'approved') {
     Alert.alert('Verifikasi KYC Diperlukan', kycMessage, [
       {
         text: 'Nanti',
@@ -93,7 +123,7 @@ export const requireKyc = async (
       },
       {
         text: 'Lengkapi Sekarang',
-        onPress: () => navigation.navigate('Profile'),
+        onPress: () => navigation.navigate('LengkapiKYC'),
       },
     ]);
     return false;

@@ -42,6 +42,7 @@ import Cart from '../screens/mart/Cart';
 import Checkout from '../screens/mart/Checkout';
 import TransactionHistory from '../screens/mart/TransactionHistory';
 import KYCVerification from '../screens/profile/KYCVerification';
+import LengkapiKYC from '../screens/kyc/LengkapiKYC';
 import SOSLiveChat from '../screens/sos/SOSLiveChat';
 import Chat from '../screens/chat/Chat';
 import Bantuan from '../screens/akun/Bantuan';
@@ -91,6 +92,7 @@ export type RootStackParamList = {
   Checkout: { cartItems?: any[]; total?: number };
   TransactionHistory: undefined;
   KYCVerification: undefined;
+  LengkapiKYC: undefined;
   SOSLiveChat: undefined;
   Chat: { userName: string; userStatus: string };
   Bantuan: undefined;
@@ -161,6 +163,7 @@ const AppNavigator = () => {
           <Stack.Screen name="Checkout" component={Checkout} />
           <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
           <Stack.Screen name="KYCVerification" component={KYCVerification} />
+          <Stack.Screen name="LengkapiKYC" component={LengkapiKYC} />
           <Stack.Screen name="SOSLiveChat" component={SOSLiveChat} />
           <Stack.Screen name="Chat" component={Chat} />
           <Stack.Screen name="Bantuan" component={Bantuan} />

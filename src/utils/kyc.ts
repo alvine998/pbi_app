@@ -1,34 +1,36 @@
-export const isKycVerified = (user: any): boolean => {
+export type KycStatus = 'unverified' | 'waiting' | 'approved' | 'rejected';
+
+export const getKycStatus = (user: any): KycStatus => {
   if (!user) {
-    return false;
+    return 'unverified';
   }
 
-  const normalizeStatus = (status?: string) => {
-    if (!status || typeof status !== 'string') return '';
-    return status.trim().toLowerCase();
-  };
+  const rawStatus =
+    user.kycStatus ||
+    user.kyc_level ||
+    user.statusKyc ||
+    user.verificationStatus;
 
-  const status = normalizeStatus(
-    user.kycStatus || user.kyc_level || user.statusKyc || user.verificationStatus
-  );
-
-  if (['verified', 'approved', 'completed', 'success', 'done'].includes(status)) {
-    return true;
+  if (typeof rawStatus === 'string') {
+    const normalized = rawStatus.trim().toLowerCase();
+    if (['verified', 'approved', 'completed', 'success', 'done'].includes(normalized)) {
+      return 'approved';
+    }
+    if (['waiting', 'pending', 'in_review', 'review'].includes(normalized)) {
+      return 'waiting';
+    }
+    if (['rejected', 'declined', 'failed'].includes(normalized)) {
+      return 'rejected';
+    }
   }
 
-  if (typeof user.kycVerified === 'boolean') {
-    return user.kycVerified;
+  if (user.kycVerified === true || user.isKycVerified === true || user.kycStatus === true) {
+    return 'approved';
   }
 
-  if (typeof user.isKycVerified === 'boolean') {
-    return user.isKycVerified;
-  }
-
-  if (typeof user.kycStatus === 'boolean') {
-    return user.kycStatus;
-  }
-
-  return false;
+  return 'unverified';
 };
 
-
+export const isKycVerified = (user: any): boolean => {
+  return getKycStatus(user) === 'approved';
+};

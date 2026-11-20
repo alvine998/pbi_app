@@ -15,6 +15,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 import { useAuth } from '../../hooks/useAuth';
 import api from '../../services/api';
+import { updateUserData } from '../../services/storage';
+import { getKycStatus } from '../../utils/kyc';
 import { useIsFocused } from '@react-navigation/native';
 
 interface ProfileProps {
@@ -49,7 +51,16 @@ export default function Profile({ navigation }: ProfileProps) {
       try {
         setLoading(true);
         const response = await api.get(`/users/${user.id}`);
-        setProfile(response.data?.data || null);
+        const fetchedProfile = response.data?.data || response.data || null;
+        setProfile(fetchedProfile);
+        if (fetchedProfile) {
+          await updateUserData({
+            kycStatus: fetchedProfile.kycStatus,
+            isKycVerified: Boolean(fetchedProfile.isKycVerified),
+            kycRejectionReason: fetchedProfile.kycRejectionReason || null,
+          });
+          await refreshAuth(true);
+        }
       } catch (err) {
         Toast.show({
           type: 'error',
@@ -255,54 +266,114 @@ export default function Profile({ navigation }: ProfileProps) {
 
           {/* KYC Status Badge */}
           <View style={{ marginTop: normalize(10) }}>
-            {(profile?.isKycVerified || user?.isKycVerified) ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: COLOR.SUCCESS + '20',
-                  paddingHorizontal: normalize(12),
-                  paddingVertical: normalize(6),
-                  borderRadius: normalize(12),
-                }}
-              >
-                <Icon name="check-circle" size={normalize(14)} color={COLOR.SUCCESS} solid />
-                <Text
+            {(() => {
+              const currentKycStatus = getKycStatus(profile || user);
+              if (currentKycStatus === 'approved') {
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: COLOR.SUCCESS + '20',
+                      paddingHorizontal: normalize(12),
+                      paddingVertical: normalize(6),
+                      borderRadius: normalize(12),
+                    }}
+                  >
+                    <Icon name="check-circle" size={normalize(14)} color={COLOR.SUCCESS} solid />
+                    <Text
+                      style={{
+                        fontSize: normalize(12),
+                        fontWeight: '600',
+                        color: COLOR.SUCCESS,
+                        marginLeft: normalize(6),
+                      }}
+                    >
+                      KYC Terverifikasi
+                    </Text>
+                  </View>
+                );
+              }
+              if (currentKycStatus === 'waiting') {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#3B82F620',
+                      paddingHorizontal: normalize(12),
+                      paddingVertical: normalize(6),
+                      borderRadius: normalize(12),
+                    }}
+                    onPress={() => navigation.navigate('LengkapiKYC')}
+                  >
+                    <Icon name="clock" size={normalize(14)} color="#2563EB" solid />
+                    <Text
+                      style={{
+                        fontSize: normalize(12),
+                        fontWeight: '600',
+                        color: '#2563EB',
+                        marginLeft: normalize(6),
+                      }}
+                    >
+                      Menunggu Persetujuan Admin
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }
+              if (currentKycStatus === 'rejected') {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#EF444420',
+                      paddingHorizontal: normalize(12),
+                      paddingVertical: normalize(6),
+                      borderRadius: normalize(12),
+                    }}
+                    onPress={() => navigation.navigate('LengkapiKYC')}
+                  >
+                    <Icon name="times-circle" size={normalize(14)} color="#DC2626" solid />
+                    <Text
+                      style={{
+                        fontSize: normalize(12),
+                        fontWeight: '600',
+                        color: '#DC2626',
+                        marginLeft: normalize(6),
+                      }}
+                    >
+                      KYC Ditolak - Ajukan Ulang
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }
+              return (
+                <TouchableOpacity
                   style={{
-                    fontSize: normalize(12),
-                    fontWeight: '600',
-                    color: COLOR.SUCCESS,
-                    marginLeft: normalize(6),
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#FFA500' + '20',
+                    paddingHorizontal: normalize(12),
+                    paddingVertical: normalize(6),
+                    borderRadius: normalize(12),
                   }}
+                  onPress={() => navigation.navigate('LengkapiKYC')}
                 >
-                  KYC Terverifikasi
-                </Text>
-              </View>
-            ) : (
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: '#FFA500' + '20',
-                  paddingHorizontal: normalize(12),
-                  paddingVertical: normalize(6),
-                  borderRadius: normalize(12),
-                }}
-                onPress={() => navigation.navigate('KYCVerification')}
-              >
-                <Icon name="exclamation-circle" size={normalize(14)} color="#FFA500" solid />
-                <Text
-                  style={{
-                    fontSize: normalize(12),
-                    fontWeight: '600',
-                    color: '#FFA500',
-                    marginLeft: normalize(6),
-                  }}
-                >
-                  Verifikasi KYC
-                </Text>
-              </TouchableOpacity>
-            )}
+                  <Icon name="exclamation-circle" size={normalize(14)} color="#FFA500" solid />
+                  <Text
+                    style={{
+                      fontSize: normalize(12),
+                      fontWeight: '600',
+                      color: '#FFA500',
+                      marginLeft: normalize(6),
+                    }}
+                  >
+                    Verifikasi KYC
+                  </Text>
+                </TouchableOpacity>
+              );
+            })()}
           </View>
         </View>
       </View>

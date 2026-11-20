@@ -19,6 +19,7 @@ export interface UserData {
   kycVerified?: boolean;
   isKycVerified?: boolean;
   kycLevel?: string;
+  kycRejectionReason?: string | null;
 }
 
 // Auth data interface

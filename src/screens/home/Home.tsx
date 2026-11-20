@@ -150,7 +150,6 @@ export default function Home({ navigation }: HomeProps) {
       setIsNewsLoading(false);
     }
   };
-  console.log(news, "denews");
 
   // Auto-advance carousel
   React.useEffect(() => {
@@ -472,9 +471,14 @@ export default function Home({ navigation }: HomeProps) {
             ) : (
               !hasCompletedKyc && (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Profile')}
+                  onPress={() => navigation.navigate('LengkapiKYC')}
                   style={{
-                    backgroundColor: COLOR.PRIMARY,
+                    backgroundColor:
+                      user?.kycStatus === 'waiting'
+                        ? '#2563EB'
+                        : user?.kycStatus === 'rejected'
+                        ? '#DC2626'
+                        : COLOR.PRIMARY,
                     paddingHorizontal: normalize(20),
                     paddingVertical: normalize(12),
                     borderRadius: normalize(25),
@@ -495,7 +499,11 @@ export default function Home({ navigation }: HomeProps) {
                       color: COLOR.WHITE,
                     }}
                   >
-                    Lengkapi KYC
+                    {user?.kycStatus === 'waiting'
+                      ? 'Menunggu KYC'
+                      : user?.kycStatus === 'rejected'
+                      ? 'KYC Ditolak'
+                      : 'Lengkapi KYC'}
                   </Text>
                 </TouchableOpacity>
               )
