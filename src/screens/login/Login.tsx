@@ -1,13 +1,12 @@
 import {
   View,
   Text,
-  Image,
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Dimensions,
   ScrollView,
   BackHandler,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import normalize from 'react-native-normalize';
@@ -16,13 +15,11 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GoogleSignin,
+  isSuccessResponse,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-
-const { width, height } = Dimensions.get('window');
 
 // Simple JWT decoder for React Native
 const decodeJwt = (token: string) => {
@@ -52,8 +49,9 @@ export default function Login({ navigation }: { navigation: any }) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { isLoading: authLoading, login } = useAuth();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -65,61 +63,54 @@ export default function Login({ navigation }: { navigation: any }) {
       }
     );
 
-    // Configure Google Sign-In with the web client ID from google-services.json
+    // OAuth web client ID registered in google-services.json
     GoogleSignin.configure({
       webClientId:
-        '309321457545-6633urc5h02pne6j1ik3egfv5a2h7tbj.apps.googleusercontent.com',
+        '504203470533-nm29r0nle6ki83ieur6leife1g6ncbnd.apps.googleusercontent.com',
+      offlineAccess: false,
     });
 
     return () => backHandler.remove();
   }, [navigation]);
 
   const handleGoogleLogin = async () => {
-    console.log('[GoogleLogin] Starting Google Sign-In...');
-    setIsLoading(true);
+    setIsGoogleLoading(true);
     try {
-      // Check if Google Play Services is available
       const hasPlayServices = await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
-      console.log('[GoogleLogin] hasPlayServices:', hasPlayServices);
+      console.log('[GoogleSignIn] Play Services tersedia:', hasPlayServices);
 
-      const userInfo = await GoogleSignin.signIn();
-      console.log('[GoogleLogin] signIn success, userInfo keys:', Object.keys(userInfo));
-      console.log('[GoogleLogin] idToken:', userInfo.idToken ? 'PRESENT' : 'MISSING');
-      console.log('[GoogleLogin] user:', JSON.stringify(userInfo.user, null, 2));
-      console.log(
-        '[GoogleLogin] serverAuthCode:',
-        userInfo.serverAuthCode ? 'PRESENT' : 'MISSING'
-      );
+      const signInResponse = await GoogleSignin.signIn();
+      if (!isSuccessResponse(signInResponse)) {
+        console.warn('[GoogleSignIn] Pemilihan akun dibatalkan');
+        Toast.show({
+          type: 'info',
+          text1: 'Login dibatalkan',
+          text2: 'Anda belum memilih akun Google',
+          position: 'top',
+        });
+        return;
+      }
 
+      const userInfo = signInResponse.data;
       const idToken = userInfo.idToken;
       if (!idToken) {
+        console.error('[GoogleSignIn] Sign-In berhasil tetapi idToken tidak tersedia');
         throw new Error('No idToken returned from Google Sign-In');
       }
 
-      // Send the ID token to the backend for verification + session creation
-      console.log('[GoogleLogin] Sending idToken to backend /auth/google...');
       const response = await api.post('/auth/google', {
         idToken,
       });
-      console.log('[GoogleLogin] Backend response status:', response.status);
-      console.log(
-        '[GoogleLogin] Backend response data:',
-        JSON.stringify(response.data, null, 2)
-      );
+      console.log('[GoogleSignIn] Backend menerima login Google:', response.status);
 
-      // Same token/user extraction pattern as email login
       const responseData = response.data?.data || response.data;
       const token = responseData?.token || responseData?.accessToken;
       let user = responseData?.user;
 
-      console.log('[GoogleLogin] Extracted Token:', token ? 'Found' : 'Not Found');
-      console.log('[GoogleLogin] Extracted User:', user ? 'Found' : 'Not Found');
-
       if (token) {
         if (!user) {
-          // Fallback user from Google profile
           user = {
             id: userInfo.user.id,
             email: userInfo.user.email,
@@ -127,7 +118,6 @@ export default function Login({ navigation }: { navigation: any }) {
           };
         }
         await login({ user, token });
-        console.log('[GoogleLogin] Auth data saved, login complete');
         Toast.show({
           type: 'success',
           text1: 'Login Berhasil',
@@ -137,29 +127,25 @@ export default function Login({ navigation }: { navigation: any }) {
         throw new Error('Google login response missing token');
       }
     } catch (error: any) {
-      console.log('[GoogleLogin] ERROR:', JSON.stringify(error, null, 2));
-      console.log('[GoogleLogin] Error message:', error?.message);
-      console.log('[GoogleLogin] Error code:', error?.code);
+      console.error('[GoogleSignIn] Error:', {
+        code: error?.code,
+        message: error?.message,
+        status: error?.response?.status,
+        backendMessage: error?.response?.data?.message,
+      });
 
       let errorMessage = 'Login Google gagal, coba lagi';
 
       if (error?.code === statusCodes.SIGN_IN_CANCELLED) {
         errorMessage = 'Login Google dibatalkan';
-        console.log('[GoogleLogin] User cancelled sign-in');
       } else if (error?.code === statusCodes.IN_PROGRESS) {
         errorMessage = 'Login sedang berlangsung';
-        console.log('[GoogleLogin] Sign-in already in progress');
       } else if (error?.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         errorMessage = 'Google Play Services tidak tersedia';
-        console.log('[GoogleLogin] Play services not available');
+      } else if (error?.code === 10 || error?.code === '10') {
+        errorMessage =
+          'Konfigurasi Google tidak cocok. Periksa SHA-1/SHA-256 dan package name.';
       } else if (error?.response) {
-        // Backend rejected the token
-        console.log(
-          '[GoogleLogin] Backend error status:',
-          error.response.status,
-          'data:',
-          JSON.stringify(error.response.data)
-        );
         const errData = error.response.data;
         errorMessage = errData?.message || 'Token Google ditolak server';
       }
@@ -171,7 +157,7 @@ export default function Login({ navigation }: { navigation: any }) {
         position: 'top',
       });
     } finally {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }
   };
 
@@ -599,9 +585,10 @@ export default function Login({ navigation }: { navigation: any }) {
             style={{
               backgroundColor: '#fff',
               paddingVertical: normalize(16),
+              minHeight: normalize(54),
               borderRadius: normalize(12),
               borderWidth: 1,
-              borderColor: '#e9ecef',
+              borderColor: isGoogleLoading ? '#d8dde3' : '#dadce0',
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
@@ -610,32 +597,30 @@ export default function Login({ navigation }: { navigation: any }) {
               shadowOpacity: 0.08,
               shadowRadius: 6,
               elevation: 3,
-              opacity: isLoading ? 0.7 : 1,
+              opacity: isGoogleLoading || isLoading ? 0.75 : 1,
             }}
             onPress={handleGoogleLogin}
-            disabled={isLoading}
+            disabled={isLoading || isGoogleLoading}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Masuk dengan Google"
+            accessibilityState={{ disabled: isLoading || isGoogleLoading, busy: isGoogleLoading }}
           >
-            <View
-              style={{
-                width: normalize(20),
-                height: normalize(20),
-                borderRadius: normalize(10),
-                backgroundColor: '#4285F4',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: normalize(10),
-              }}
-            >
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: normalize(13),
-                  fontWeight: '700',
-                }}
-              >
-                G
-              </Text>
-            </View>
+            {isGoogleLoading ? (
+              <ActivityIndicator
+                size="small"
+                color={COLOR.PRIMARY}
+                style={{ marginRight: normalize(10) }}
+              />
+            ) : (
+              <Icon
+                brand
+                name="google"
+                size={normalize(20)}
+                color="#4285F4"
+                style={{ marginRight: normalize(10) }}
+              />
+            )}
             <Text
               style={{
                 color: '#333',
@@ -644,7 +629,7 @@ export default function Login({ navigation }: { navigation: any }) {
                 textAlign: 'center',
               }}
             >
-              Masuk dengan Google
+              {isGoogleLoading ? 'Menghubungkan...' : 'Masuk dengan Google'}
             </Text>
           </TouchableOpacity>
         </View>
